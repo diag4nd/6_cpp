@@ -1,23 +1,27 @@
-#include <ncurses.h>
+#include <curses.h>
 #include <iostream>
 #include <fstream>
 #include <string>
+
+
+using namespace std;
 
 // Let the monkeys be everywhere:
 // User is playing as a monkey in an air baloon and fights against enemy monkeys
 class Monkey 
 {
-private:
-	bool alive;
-	int y, x;			// The coordiantes of the top left corner of the object's window
-	const int height, width;	// The dimensions of the object's window	
 public:
 	Monkey(int _y, int _x, int _h, int _w): alive{true}, y{_y}, x{_x}, height{_h}, width{_w}
 	{}
 	
+	//WINDOW* win; 
+	bool alive;
+	const int height, width;	// The dimensions of the object's window	
+	int y, x;			// The coordiantes of the top left corner of the object's window
+	
 	bool isHitted();		// Check all of the cells whether they intersect with external objects
-	void show();
 };
+
 
 class Player: public Monkey
 {
@@ -25,22 +29,68 @@ private:
 	int points;			// The amount of points earned by player
 	int fuel; 			// The amount of fuel to raise the baloon higher 
 public:
-	Player(int _y, int _x, int _h = 5, int _w = 5): Monkey(_y, _x, _h, _w), points{0}, fuel{100}
+	Player(int _y, int _x, int _h = 5, int _w = 5): Monkey(_y, _x, _h, _w), points{0}, fuel{50}
 	{}
 	
-	void movePlayer();
+	void move();
 };
+
+void Player::move()
+{
+	switch (getch())
+	{
+		case KEY_LEFT:
+		case 'a':
+			x-=2;
+			y+=2;
+			break;
+		case KEY_RIGHT:
+		case 'd':
+			x+=2;
+			y+=2;
+			break;
+		case KEY_UP:
+		case 'w':
+			if (fuel)
+			{
+				y-=3;
+				fuel--;
+			}
+			break;
+		case ERR:
+			y+=2;
+			break;
+	}
+	
+	clear();
+	// Read and print a file with the player's sprite 
+	ifstream fRead;
+	string line;
+	int idx{0};
+	fRead.open(".game/sprites/player");
+	while (getline(fRead, line))
+	{
+		mvprintw(y + idx, x, line.c_str());
+		idx += 1;
+	}
+	fRead.close();
+	
+	refresh();
+}
+
 
 class Enemy: public Monkey
 {
 private:
 	int reward;			// The reward for destroying
-	const double delay; 		// The delay of shooting
+	double delay; 			// The delay of the enenemy's shooting. Can be a chosen due to difficulty levels: "easy", "medium", "hard"
 public:
 	Enemy(int _y, int _x, int _h, int _w): Monkey(_y, _x, _h, _w), reward{100}, delay{0}
-	{}
+	{};
 	~Enemy()
-	{}
+	{};
+
+	void setDelay(int _idx = 0);	// A function to set delay due to user's choice of the difficulty level
 };
 
 
@@ -56,12 +106,15 @@ void hallOfFame(); 			// Do command in "HALL OF FAME" menu due to user's input
 void showSettings(int _idx = 0);	// Show "SETTINGS" window with 3 different difficulty levels
 void settings();			// Do command in "SETTINGS" menu due to user's input
 void setParams();			// Set parametres of the game due to difficulty level
+void playGame();			// Start a game session with chosen difficulty level ("Easy" by default)
+
 
 int choice{0};				// A varibale to detect user's behaviour
+string difficultyLvl{"EASY"};		// A variable to define difficulty level of the game
 int tuneX{2};				// A variable to tune output position on the X-axis
 int tuneY{0};				// A variable to tune output position on the Y-axis
+int ovrlDel{5};
 
-using namespace std;
 
 int main()
 {
@@ -108,49 +161,49 @@ void showStartMenu(int _idx)
 		
 	// Show navigation panel
 	int navHeight{20}, navWidth{57}, navY(yMax/2), navX{xMax/3 - 5};
-	WINDOW* navWin = newwin(navHeight, navWidth, navY, navX);
+	//WINDOW* navWin = newwin(navHeight, navWidth, navY, navX);
 	
 	int idx = 1;
 	switch (_idx)
 	{
 		case 0:
-			mvprintw(navY + navHeight/5 + idx, navX + navWidth/3 + tuneX, ">>        PLAY        <<");
+			mvprintw(navY + navHeight/5 + idx + tuneY, navX + navWidth/3 + tuneX, ">>        PLAY        <<");
 			idx += 3;	
-			mvprintw(navY + navHeight/5 + idx, navX + navWidth/3 + tuneX, "          HELP          ");
+			mvprintw(navY + navHeight/5 + idx + tuneY, navX + navWidth/3 + tuneX, "          HELP          ");
 			idx += 3;	
-			mvprintw(navY + navHeight/5 + idx, navX + navWidth/3 + tuneX, "      HALL OF FAME      ");
+			mvprintw(navY + navHeight/5 + idx + tuneY, navX + navWidth/3 + tuneX, "      HALL OF FAME      ");
 			idx += 3;
-			mvprintw(navY + navHeight/5 + idx, navX + navWidth/3 + tuneX, "          EXIT          ");
+			mvprintw(navY + navHeight/5 + idx + tuneY, navX + navWidth/3 + tuneX, "          EXIT          ");
 			refresh();
 			break;
 		case 1:
-			mvprintw(navY + navHeight/5 + idx, navX + navWidth/3 + tuneX, "          PLAY          ");
+			mvprintw(navY + navHeight/5 + idx + tuneY, navX + navWidth/3 + tuneX, "          PLAY          ");
 			idx += 3;	
-			mvprintw(navY + navHeight/5 + idx, navX + navWidth/3 + tuneX, ">>        HELP        <<");
+			mvprintw(navY + navHeight/5 + idx + tuneY, navX + navWidth/3 + tuneX, ">>        HELP        <<");
 			idx += 3;	
-			mvprintw(navY + navHeight/5 + idx, navX + navWidth/3 + tuneX, "      HALL OF FAME      ");
+			mvprintw(navY + navHeight/5 + idx + tuneY, navX + navWidth/3 + tuneX, "      HALL OF FAME      ");
 			idx += 3;
-			mvprintw(navY + navHeight/5 + idx, navX + navWidth/3 + tuneX, "          EXIT          ");
+			mvprintw(navY + navHeight/5 + idx + tuneY, navX + navWidth/3 + tuneX, "          EXIT          ");
 			refresh();
 			break;
 		case 2:
-			mvprintw(navY + navHeight/5 + idx, navX + navWidth/3 + tuneX, "          PLAY          ");
+			mvprintw(navY + navHeight/5 + idx + tuneY, navX + navWidth/3 + tuneX, "          PLAY          ");
 			idx += 3;	
-			mvprintw(navY + navHeight/5 + idx, navX + navWidth/3 + tuneX, "          HELP          ");
+			mvprintw(navY + navHeight/5 + idx + tuneY, navX + navWidth/3 + tuneX, "          HELP          ");
 			idx += 3;	
-			mvprintw(navY + navHeight/5 + idx, navX + navWidth/3 + tuneX, ">>    HALL OF FAME    <<");
+			mvprintw(navY + navHeight/5 + idx + tuneY, navX + navWidth/3 + tuneX, ">>    HALL OF FAME    <<");
 			idx += 3;
-			mvprintw(navY + navHeight/5 + idx, navX + navWidth/3 + tuneX, "          EXIT          ");
+			mvprintw(navY + navHeight/5 + idx + tuneY, navX + navWidth/3 + tuneX, "          EXIT          ");
 			refresh();
 			break;
 		case 3:
-			mvprintw(navY + navHeight/5 + idx, navX + navWidth/3 + tuneX, "          PLAY          ");
+			mvprintw(navY + navHeight/5 + idx + tuneY, navX + navWidth/3 + tuneX, "          PLAY          ");
 			idx += 3;	
-			mvprintw(navY + navHeight/5 + idx, navX + navWidth/3 + tuneX, "          HELP          ");
+			mvprintw(navY + navHeight/5 + idx + tuneY, navX + navWidth/3 + tuneX, "          HELP          ");
 			idx += 3;	
-			mvprintw(navY + navHeight/5 + idx, navX + navWidth/3 + tuneX, "      HALL OF FAME      ");
+			mvprintw(navY + navHeight/5 + idx + tuneY, navX + navWidth/3 + tuneX, "      HALL OF FAME      ");
 			idx += 3;
-			mvprintw(navY + navHeight/5 + idx, navX + navWidth/3 + tuneX, ">>        EXIT        <<");
+			mvprintw(navY + navHeight/5 + idx + tuneY, navX + navWidth/3 + tuneX, ">>        EXIT        <<");
 			refresh();
 			break;
 	}
@@ -222,43 +275,43 @@ void showGameMenu(int _idx)
 	switch (_idx)
 	{
 		case 0:
-			mvprintw(navY + navHeight/5 + idx, navX + navWidth/3 + tuneX, ">>      NEW GAME      <<");
+			mvprintw(navY + navHeight/5 + idx + tuneY, navX + navWidth/3 + tuneX, ">>      NEW GAME      <<");
 			idx += 3;	
-			mvprintw(navY + navHeight/5 + idx, navX + navWidth/3 + tuneX, "          LOAD          ");
+			mvprintw(navY + navHeight/5 + idx + tuneY, navX + navWidth/3 + tuneX, "          LOAD          ");
 			idx += 3;	
-			mvprintw(navY + navHeight/5 + idx, navX + navWidth/3 + tuneX, "        SETTINGS        ");
+			mvprintw(navY + navHeight/5 + idx + tuneY, navX + navWidth/3 + tuneX, "        SETTINGS        ");
 			idx += 3;
-			mvprintw(navY + navHeight/5 + idx, navX + navWidth/3 + tuneX, "          BACK          ");
+			mvprintw(navY + navHeight/5 + idx + tuneY, navX + navWidth/3 + tuneX, "          BACK          ");
 			refresh();
 			break;
 		case 1:
-			mvprintw(navY + navHeight/5 + idx, navX + navWidth/3 + tuneX, "        NEW GAME        ");
+			mvprintw(navY + navHeight/5 + idx + tuneY, navX + navWidth/3 + tuneX, "        NEW GAME        ");
 			idx += 3;	
-			mvprintw(navY + navHeight/5 + idx, navX + navWidth/3 + tuneX, ">>        LOAD        <<");
+			mvprintw(navY + navHeight/5 + idx + tuneY, navX + navWidth/3 + tuneX, ">>        LOAD        <<");
 			idx += 3;	
-			mvprintw(navY + navHeight/5 + idx, navX + navWidth/3 + tuneX, "        SETTINGS        ");
+			mvprintw(navY + navHeight/5 + idx + tuneY, navX + navWidth/3 + tuneX, "        SETTINGS        ");
 			idx += 3;
-			mvprintw(navY + navHeight/5 + idx, navX + navWidth/3 + tuneX, "          BACK          ");
+			mvprintw(navY + navHeight/5 + idx + tuneY, navX + navWidth/3 + tuneX, "          BACK          ");
 			refresh();
 			break;
 		case 2:
-			mvprintw(navY + navHeight/5 + idx, navX + navWidth/3 + tuneX, "        NEW GAME        ");
+			mvprintw(navY + navHeight/5 + idx + tuneY, navX + navWidth/3 + tuneX, "        NEW GAME        ");
 			idx += 3;	
-			mvprintw(navY + navHeight/5 + idx, navX + navWidth/3 + tuneX, "          LOAD          ");
+			mvprintw(navY + navHeight/5 + idx + tuneY, navX + navWidth/3 + tuneX, "          LOAD          ");
 			idx += 3;	
-			mvprintw(navY + navHeight/5 + idx, navX + navWidth/3 + tuneX, ">>      SETTINGS      <<");
+			mvprintw(navY + navHeight/5 + idx + tuneY, navX + navWidth/3 + tuneX, ">>      SETTINGS      <<");
 			idx += 3;
-			mvprintw(navY + navHeight/5 + idx, navX + navWidth/3 + tuneX, "          BACK          ");
+			mvprintw(navY + navHeight/5 + idx + tuneY, navX + navWidth/3 + tuneX, "          BACK          ");
 			refresh();
 			break;
 		case 3:
-			mvprintw(navY + navHeight/5 + idx, navX + navWidth/3 + tuneX, "        NEW GAME        ");
+			mvprintw(navY + navHeight/5 + idx + tuneY, navX + navWidth/3 + tuneX, "        NEW GAME        ");
 			idx += 3;	
-			mvprintw(navY + navHeight/5 + idx, navX + navWidth/3 + tuneX, "          LOAD          ");
+			mvprintw(navY + navHeight/5 + idx + tuneY, navX + navWidth/3 + tuneX, "          LOAD          ");
 			idx += 3;	
-			mvprintw(navY + navHeight/5 + idx, navX + navWidth/3 + tuneX, "        SETTINGS        ");
+			mvprintw(navY + navHeight/5 + idx + tuneY, navX + navWidth/3 + tuneX, "        SETTINGS        ");
 			idx += 3;
-			mvprintw(navY + navHeight/5 + idx, navX + navWidth/3 + tuneX, ">>        BACK        <<");
+			mvprintw(navY + navHeight/5 + idx + tuneY, navX + navWidth/3 + tuneX, ">>        BACK        <<");
 			refresh();
 			break;
 	}
@@ -295,6 +348,7 @@ void gameMenu()
 
 			{
 				case 0:
+					playGame();
 					break;
 				case 1:
 					break;
@@ -331,17 +385,17 @@ void showSettings(int _idx)
 	switch (_idx)
 	{
 		case 0:
-			mvprintw(navY + navHeight/5 + idx, navX + navWidth/3 + tuneX, ">>  DIFFICULTY:     EASY ");
+			mvprintw(navY + navHeight/5 + idx + tuneY, navX + navWidth/3 + tuneX, ">>  DIFFICULTY:     EASY ");
 			refresh();
 			break;
 		case 1:
 			
-			mvprintw(navY + navHeight/5 + idx, navX + navWidth/3 + tuneX, ">>  DIFFICULTY:   MEDIUM ");
+			mvprintw(navY + navHeight/5 + idx + tuneY, navX + navWidth/3 + tuneX, ">>  DIFFICULTY:   MEDIUM ");
 			refresh();
 			break;
 		case 2:
 			
-			mvprintw(navY + navHeight/5 + idx, navX + navWidth/3 + tuneX, ">>  DIFFICULTY:     HARD ");
+			mvprintw(navY + navHeight/5 + idx + tuneY, navX + navWidth/3 + tuneX, ">>  DIFFICULTY:     HARD ");
 			refresh();
 			break;
 	}
@@ -398,3 +452,33 @@ void setParams(int _idx)
 	}
 }
 */
+
+void playGame()
+{
+	clear();
+	refresh();
+	halfdelay(ovrlDel);	
+	
+	// Get screen size
+	int yMax, xMax;
+	getmaxyx(stdscr, yMax, xMax);
+
+
+	Player baloon(yMax/5, xMax/5);
+	ifstream fRead;
+	string line;
+	int idx{0};
+	fRead.open(".game/sprites/player");
+	while (getline(fRead, line))
+	{
+		mvprintw(baloon.y + idx, baloon.x, line.c_str());
+		idx += 1;
+	}
+	fRead.close();
+	//wrefresh(baloon.win);
+	refresh();
+	while(true)
+	{
+		baloon.move();
+	}
+}
