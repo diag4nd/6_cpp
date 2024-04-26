@@ -1,4 +1,4 @@
-#include <curses.h>
+#include <panel.h>
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -6,94 +6,7 @@
 
 using namespace std;
 
-// Let the monkeys be everywhere:
-// User is playing as a monkey in an air baloon and fights against enemy monkeys
-class Monkey 
-{
-public:
-	Monkey(int _y, int _x, int _h, int _w): alive{true}, y{_y}, x{_x}, height{_h}, width{_w}
-	{}
-	
-	//WINDOW* win; 
-	bool alive;
-	const int height, width;	// The dimensions of the object's window	
-	int y, x;			// The coordiantes of the top left corner of the object's window
-	
-	bool isHitted();		// Check all of the cells whether they intersect with external objects
-};
-
-
-class Player: public Monkey
-{
-private:
-	int points;			// The amount of points earned by player
-	int fuel; 			// The amount of fuel to raise the baloon higher 
-public:
-	Player(int _y, int _x, int _h = 5, int _w = 5): Monkey(_y, _x, _h, _w), points{0}, fuel{50}
-	{}
-	
-	void move();
-};
-
-void Player::move()
-{
-	switch (getch())
-	{
-		case KEY_LEFT:
-		case 'a':
-			x-=2;
-			y+=2;
-			break;
-		case KEY_RIGHT:
-		case 'd':
-			x+=2;
-			y+=2;
-			break;
-		case KEY_UP:
-		case 'w':
-			if (fuel)
-			{
-				y-=3;
-				fuel--;
-			}
-			break;
-		case ERR:
-			y+=2;
-			break;
-	}
-	
-	clear();
-	// Read and print a file with the player's sprite 
-	ifstream fRead;
-	string line;
-	int idx{0};
-	fRead.open(".game/sprites/player");
-	while (getline(fRead, line))
-	{
-		mvprintw(y + idx, x, line.c_str());
-		idx += 1;
-	}
-	fRead.close();
-	
-	refresh();
-}
-
-
-class Enemy: public Monkey
-{
-private:
-	int reward;			// The reward for destroying
-	double delay; 			// The delay of the enenemy's shooting. Can be a chosen due to difficulty levels: "easy", "medium", "hard"
-public:
-	Enemy(int _y, int _x, int _h, int _w): Monkey(_y, _x, _h, _w), reward{100}, delay{0}
-	{};
-	~Enemy()
-	{};
-
-	void setDelay(int _idx = 0);	// A function to set delay due to user's choice of the difficulty level
-};
-
-
+int main();
 void showTitle();			// Show the title of the game
 void showStartMenu(int _idx = 0);	// Show start menu with 4 options
 void startMenu(); 			// Do command in start menu due to user's input
@@ -113,17 +26,125 @@ int choice{0};				// A varibale to detect user's behaviour
 string difficultyLvl{"EASY"};		// A variable to define difficulty level of the game
 int tuneX{2};				// A variable to tune output position on the X-axis
 int tuneY{0};				// A variable to tune output position on the Y-axis
-int ovrlDel{5};
+int ovrlDel{3};
+
+
+// Let the monkeys be everywhere:
+// User is playing as a monkey in an air baloon and fights against enemy monkeys
+class Monkey 
+{
+public:
+	Monkey(int _y, int _x, int _h, int _w): alive{true}, y{_y}, x{_x}, height{_h}, width{_w}
+	{
+		win = newwin(height, width, y, x);
+		pan = new_panel(win);
+		refresh();
+	}
+
+	WINDOW* win;
+       	PANEL* pan;	
+	bool alive;
+	const int height, width;	// The dimensions of the object's window	
+	int y, x;			// The coordiantes of the top left corner of the object's window
+	
+	bool isHitted();		// Check all of the cells whether they intersect with external objects
+};
+
+
+class Player: public Monkey
+{
+private:
+	int points;			// The amount of points earned by player
+	int fuel; 			// The amount of fuel to move the baloon 
+public:
+	Player(int _y, int _x, int _h = 6, int _w = 7): Monkey(_y, _x, _h, _w), points{0}, fuel{500}
+	{
+		ifstream fRead;
+		string line;
+		int idx{0};
+		fRead.open(".game/sprites/player");
+		while (getline(fRead, line))
+		{
+			mvwprintw(win, idx, 0, line.c_str());
+			idx += 1;
+		}
+		fRead.close();
+		wrefresh(win);
+	}
+	~Player()
+	{
+		del_panel(pan);
+		delwin(win);
+	}
+	
+	void move();
+};
+
+void Player::move()
+{
+	// Get screen size
+	int yMax, xMax;
+	getmaxyx(stdscr, yMax, xMax);
+
+	switch (getch())
+	{
+		case KEY_LEFT:
+		case 'a':
+			x-=2;
+			y+=1;
+			break;
+		case KEY_RIGHT:
+		case 'd':
+			x+=2;
+			y+=1;
+			break;
+		case KEY_UP:
+		case 'w':
+			if (fuel)
+			{
+				y-=2;
+				fuel--;
+			}
+			break;
+		case ERR:
+			y+=1;
+			break;
+	}
+	if ((x <= 0) or (x >= xMax - width + 1) or (y <= 0) or (y >= yMax - height + 1))
+	{
+		// TODO
+		this->~Player();
+		endwin();
+		main();
+	}
+	else
+	{
+		move_panel(pan, y, x);
+		update_panels();
+		doupdate();
+	}	
+}
+
+
+class Enemy: public Monkey
+{
+private:
+	int reward;			// The reward for destroying
+	double delay; 			// The delay of the enenemy's shooting. Can be a chosen due to difficulty levels: "easy", "medium", "hard"
+public:
+	Enemy(int _y, int _x, int _h, int _w): Monkey(_y, _x, _h, _w), reward{100}, delay{0}
+	{};
+	~Enemy()
+	{};
+
+	void setDelay(int _idx = 0);	// A function to set delay due to user's choice of the difficulty level
+};
+
+
 
 
 int main()
-{
-	// Setting initial parameters
-	initscr();
-	noecho();			// To not see what user types
-	curs_set(0);			// To make cursor invincible
-	keypad(stdscr, true);		// To work with arrows
-	
+{	
 	// Main procces	
 	showStartMenu();	
 
@@ -152,16 +173,23 @@ void showTitle()
 
 void showStartMenu(int _idx)
 {	
+	// Setting initial parameters
+	initscr();
+	noecho();			// To not see what user types
+	curs_set(0);			// To make cursor invincible
+	keypad(stdscr, true);		// To work with arrows
+
+	
 	// Get screen size
 	int yMax, xMax;
 	getmaxyx(stdscr, yMax, xMax);
 
 	// Show title
+	clear();
 	showTitle();
 		
-	// Show navigation panel
+	// Navigation panel parameters
 	int navHeight{20}, navWidth{57}, navY(yMax/2), navX{xMax/3 - 5};
-	//WINDOW* navWin = newwin(navHeight, navWidth, navY, navX);
 	
 	int idx = 1;
 	switch (_idx)
@@ -267,10 +295,9 @@ void showGameMenu(int _idx)
 	// Show tittle	
 	showTitle();
 
-	// Show navigation panel
+	// Navigation panel parameters
 	int navHeight{20}, navWidth{57}, navY(yMax/2), navX{xMax/3 - 5};
-	WINDOW* navWin = newwin(navHeight, navWidth, navY, navX);
-	
+		
 	int idx = 1;
 	switch (_idx)
 	{
@@ -366,6 +393,18 @@ void gameMenu()
 	}	
 }
 
+void showHelp(int _idx)
+{
+	clear();
+	refresh();
+	
+	int yMax, xMax;
+	getmaxyx(stdscr, yMax, xMax);
+	
+	// Navigation panel parameters
+	int winHeight{20}, winWidth{57}, winY(yMax/2), winX{xMax/3 - 5};
+}
+
 void showSettings(int _idx)
 {
 	clear();
@@ -377,10 +416,9 @@ void showSettings(int _idx)
 	// Show tittle	
 	showTitle();
 
-	// Show navigation panel
+	// Navigation panel parameters
 	int navHeight{20}, navWidth{57}, navY(yMax/2), navX{xMax/3 - 5};
-	WINDOW* navWin = newwin(navHeight, navWidth, navY, navX);
-
+	
 	int idx = 1;
 	switch (_idx)
 	{
@@ -463,20 +501,8 @@ void playGame()
 	int yMax, xMax;
 	getmaxyx(stdscr, yMax, xMax);
 
-
 	Player baloon(yMax/5, xMax/5);
-	ifstream fRead;
-	string line;
-	int idx{0};
-	fRead.open(".game/sprites/player");
-	while (getline(fRead, line))
-	{
-		mvprintw(baloon.y + idx, baloon.x, line.c_str());
-		idx += 1;
-	}
-	fRead.close();
-	//wrefresh(baloon.win);
-	refresh();
+	
 	while(true)
 	{
 		baloon.move();
