@@ -9,7 +9,6 @@ using namespace std;
 int main();
 void showTitle();			// Show the title of the game
 void showStartMenu(int _idx = 0);	// Show start menu with 4 options
-void startMenu(); 			// Do command in start menu due to user's input
 void showGameMenu(int _idx = 0); 	// Show "PLAY" menu with some options
 void gameMenu(); 			// Do command in "PLAY" menu due to user's input
 void showHelp(int _idx = 0); 		// Show "HELP" window with helpful information
@@ -30,24 +29,55 @@ int ovrlDel{3};
 
 
 // Let the monkeys be everywhere:
-// User is playing as a monkey in an air baloon and fights against enemy monkeys
+// User is playing as a monkey in an air baloon and fights against enemy monkeys. And anything might be a monkey...
 class Monkey 
 {
 public:
-	Monkey(int _y, int _x, int _h, int _w): alive{true}, y{_y}, x{_x}, height{_h}, width{_w}
+	WINDOW* win;
+       	PANEL* pan;	
+	int height, width;		// The dimensions of the object's window	
+	int y, x;			// The coordiantes of the top left corner of the object's window
+	
+	bool isHitted();		// Check all of the cells whether they intersect with external objects
+
+	Monkey()
+	{}	
+	Monkey(int _y, int _x, int _h, int _w): y{_y}, x{_x}, height{_h}, width{_w}
 	{
 		win = newwin(height, width, y, x);
 		pan = new_panel(win);
 		refresh();
 	}
 
-	WINDOW* win;
-       	PANEL* pan;	
-	bool alive;
-	const int height, width;	// The dimensions of the object's window	
-	int y, x;			// The coordiantes of the top left corner of the object's window
+	~Monkey()
+	{
+		del_panel(pan);
+		delwin(win);
+	}
+};
+
+
+class Screen: public Monkey
+{
+public:	
+	string path;
 	
-	bool isHitted();		// Check all of the cells whether they intersect with external objects
+	Screen()
+	{}
+	Screen(int _y, int _x, int _h, int _w, string _filename): Monkey(_y, _x, _h, _w), path{".game/sprites/" + _filename}
+	{
+		ifstream fRead;
+		string line;
+		int idx{0};
+		fRead.open(path.c_str());
+		while (getline(fRead, line))
+		{
+			mvwprintw(win, idx, 0, line.c_str());
+			idx += 1;
+		}
+		fRead.close();
+		wrefresh(win);
+	}
 };
 
 
@@ -70,13 +100,7 @@ public:
 		}
 		fRead.close();
 		wrefresh(win);
-	}
-	~Player()
-	{
-		del_panel(pan);
-		delwin(win);
-	}
-	
+	}	
 	void move();
 };
 
@@ -112,8 +136,7 @@ void Player::move()
 	}
 	if ((x <= 0) or (x >= xMax - width + 1) or (y <= 0) or (y >= yMax - height + 1))
 	{
-		// TODO
-		this->~Player();
+		this->~Monkey();
 		endwin();
 		main();
 	}
@@ -141,108 +164,14 @@ public:
 };
 
 
+extern Screen title;
+extern Screen startMenu[4];
 
-
-int main()
-{	
-	// Main procces	
-	showStartMenu();	
-
-	return 0;
-}
-
-void showTitle()
-{	
-	// Get screen size
-	int yMax, xMax;
-	getmaxyx(stdscr, yMax, xMax);
-
-	// Read and print a file with the title 
-	ifstream fRead;
-	string line;
-	int idx{0};
-	fRead.open(".game/sprites/title");
-	while (getline(fRead, line))
-	{
-		mvprintw(yMax/4 + idx, xMax/3 - 5 + tuneX, line.c_str());
-		idx += 1;
-	}
-	fRead.close();
-	refresh();
-}
 
 void showStartMenu(int _idx)
-{	
-	// Setting initial parameters
-	initscr();
-	noecho();			// To not see what user types
-	curs_set(0);			// To make cursor invincible
-	keypad(stdscr, true);		// To work with arrows
-
-	
-	// Get screen size
-	int yMax, xMax;
-	getmaxyx(stdscr, yMax, xMax);
-
-	// Show title
-	clear();
-	showTitle();
-		
-	// Navigation panel parameters
-	int navHeight{20}, navWidth{57}, navY(yMax/2), navX{xMax/3 - 5};
-	
-	int idx = 1;
-	switch (_idx)
-	{
-		case 0:
-			mvprintw(navY + navHeight/5 + idx + tuneY, navX + navWidth/3 + tuneX, ">>        PLAY        <<");
-			idx += 3;	
-			mvprintw(navY + navHeight/5 + idx + tuneY, navX + navWidth/3 + tuneX, "          HELP          ");
-			idx += 3;	
-			mvprintw(navY + navHeight/5 + idx + tuneY, navX + navWidth/3 + tuneX, "      HALL OF FAME      ");
-			idx += 3;
-			mvprintw(navY + navHeight/5 + idx + tuneY, navX + navWidth/3 + tuneX, "          EXIT          ");
-			refresh();
-			break;
-		case 1:
-			mvprintw(navY + navHeight/5 + idx + tuneY, navX + navWidth/3 + tuneX, "          PLAY          ");
-			idx += 3;	
-			mvprintw(navY + navHeight/5 + idx + tuneY, navX + navWidth/3 + tuneX, ">>        HELP        <<");
-			idx += 3;	
-			mvprintw(navY + navHeight/5 + idx + tuneY, navX + navWidth/3 + tuneX, "      HALL OF FAME      ");
-			idx += 3;
-			mvprintw(navY + navHeight/5 + idx + tuneY, navX + navWidth/3 + tuneX, "          EXIT          ");
-			refresh();
-			break;
-		case 2:
-			mvprintw(navY + navHeight/5 + idx + tuneY, navX + navWidth/3 + tuneX, "          PLAY          ");
-			idx += 3;	
-			mvprintw(navY + navHeight/5 + idx + tuneY, navX + navWidth/3 + tuneX, "          HELP          ");
-			idx += 3;	
-			mvprintw(navY + navHeight/5 + idx + tuneY, navX + navWidth/3 + tuneX, ">>    HALL OF FAME    <<");
-			idx += 3;
-			mvprintw(navY + navHeight/5 + idx + tuneY, navX + navWidth/3 + tuneX, "          EXIT          ");
-			refresh();
-			break;
-		case 3:
-			mvprintw(navY + navHeight/5 + idx + tuneY, navX + navWidth/3 + tuneX, "          PLAY          ");
-			idx += 3;	
-			mvprintw(navY + navHeight/5 + idx + tuneY, navX + navWidth/3 + tuneX, "          HELP          ");
-			idx += 3;	
-			mvprintw(navY + navHeight/5 + idx + tuneY, navX + navWidth/3 + tuneX, "      HALL OF FAME      ");
-			idx += 3;
-			mvprintw(navY + navHeight/5 + idx + tuneY, navX + navWidth/3 + tuneX, ">>        EXIT        <<");
-			refresh();
-			break;
-	}
-	while (true)
-	{
-		startMenu();
-	}
-}
-
-void startMenu()
 {
+	top_panel(startMenu[_idx].pan);
+	
 	switch (getch())
 	{
 		case KEY_DOWN:
@@ -269,7 +198,7 @@ void startMenu()
 			{
 				case 0:
 					choice = 0;
-					showGameMenu();
+					//showGameMenu();
 					break;
 				case 1:
 					//choice = 0;
@@ -285,7 +214,7 @@ void startMenu()
 			}
 	}
 }
-
+/*
 void showGameMenu(int _idx)
 {
 	// Get screen size
@@ -466,6 +395,8 @@ void settings()
 			break;
 	}
 }
+*/
+
 /*
 void setParams(int _idx)
 {
@@ -491,6 +422,8 @@ void setParams(int _idx)
 }
 */
 
+
+/*
 void playGame()
 {
 	clear();
@@ -508,3 +441,45 @@ void playGame()
 		baloon.move();
 	}
 }
+*/
+
+int main()
+{		
+	// Setting initial parameters
+	initscr();
+	noecho();			// To not see what user types
+	curs_set(0);			// To make cursor invincible
+	keypad(stdscr, true);		// To work with arrows
+	clear();
+	
+	// Get screen size
+	int yMax, xMax;
+	getmaxyx(stdscr, yMax, xMax);
+
+	// Create title panel
+	int titleHeight{10}, titleWidth{59}, titleY(yMax/4), titleX{xMax/3 - 5 + tuneX};	
+	title = Screen(titleHeight, titleWidth, titleY, titleX, "title");
+	
+	// Create start menu panel
+	int startHeight{20}, startWidth{57}, startY(yMax/2), startX{xMax/3 - 5};
+	for (int i = 0; i < 4; i++)
+	{
+		startMenu[i] = Screen(startHeight, startWidth, startY, startX, "start" + to_string(i));
+	}
+	
+	showStartMenu();
+	
+	/*
+	// Create game menu panel
+	Screen gameMenu[4];
+	for (int i = 0; i < 4; i++)
+	{
+		gameMenu[i] = Screen(startHeight, startWidth, startY, startX, "game" + string(i));
+	}
+	
+	// Main procces	
+	showStartMenu();	
+	*/
+	return 0;
+}
+
