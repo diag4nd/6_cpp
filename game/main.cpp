@@ -27,7 +27,7 @@ int tuneX{2};				// A variable to tune output position on the X-axis
 int tuneY{0};				// A variable to tune output position on the Y-axis
 int ovrlDel{3};
 
-
+/*
 // Let the monkeys be everywhere:
 // User is playing as a monkey in an air baloon and fights against enemy monkeys. And anything might be a monkey...
 class Monkey 
@@ -55,7 +55,7 @@ public:
 		delwin(win);
 	}
 };
-
+*/
 
 class Screen: public Monkey
 {
