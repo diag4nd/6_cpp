@@ -9,7 +9,7 @@ private:
 	int points;
 	int fuel;
 public:
-	Player(int _y, int _x, int _h = 0, int _w = 7);
+	Player(int _y, int _x, int _h = 6, int _w = 8);
 
 	void move();	
 };

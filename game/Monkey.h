@@ -1,21 +1,19 @@
-#ifndef _MONKEY_H
-#define _MONKEY_H
+#ifndef __MONKEY_H__
+#define __MONKEY_H__
 
 #include <panel.h>
 
 class Monkey
 {
 public:
-	WINDOW* win;
-	PANEL pan;
-	int height, width;
-	int y, x;
-
-	bool isHitted();
-
 	Monkey();
 	Monkey(int _y, int _x, int _h, int _w);
 	~Monkey();
+
+	WINDOW* win;
+	PANEL* pan;
+	int height, width;
+	int y, x;
 };
 
-#endif // _MONKEY_H
+#endif // __MONKEY_H__

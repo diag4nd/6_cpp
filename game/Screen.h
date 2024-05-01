@@ -4,13 +4,15 @@
 #include "Monkey.h"
 #include <string>
 
+using namespace std;
+
 class Screen: public Monkey
 {
 public:
-	std::string path;
-
 	Screen();
-	Screen(int _y, int _x, int _h, int _w, std::string _filename);
+	Screen(int _y, int _x, int _h, int _w, string _filename);
+
+	string path;
 };
 
 #endif // _SCREEN_H

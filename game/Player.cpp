@@ -1,9 +1,14 @@
+#include "functions.h"
 #include "Player.h"
+#include <fstream>
+#include <string>
 
-Player(int _y, int _x, int _h, int _w): Monkey(_y, _x, _h, _w), points{0}, fuel{500}
+using namespace std;
+
+Player::Player(int _y, int _x, int _h, int _w): Monkey(_y, _x, _h, _w), points{0}, fuel{500}
 {
-	std::ifstream fRead;
-	std::string line;
+	ifstream fRead;
+	string line;
 	int idx = 0;
 	fRead.open(".game/sprites/player");
 	while (getline(fRead, line))
