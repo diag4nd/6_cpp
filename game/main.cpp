@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <array>
+#include <stdio.h>
 
 #include "globals.cpp"
 #include "functions.cpp"
@@ -15,40 +16,42 @@ using namespace std;
 int main()
 {		
 	// Setting initial parameters
+	choice = 0;
 	initscr();
 	noecho();			// To not see what user types
 	curs_set(0);			// To make cursor invincible
 	keypad(stdscr, true);		// To work with arrows
+	raw();
 
 	// Get screen size
 	int yMax, xMax;
 	getmaxyx(stdscr, yMax, xMax);
-	
+
 	// Create title panel
 	int titleHeight(10), titleWidth(59), titleY(yMax/4), titleX(xMax/3);	
 	Screen title(titleY, titleX, titleHeight, titleWidth, "title");
 	
 	// Create menu panel	
-	int startHeight(20), startWidth(59), startY(yMax/2), startX(xMax/3 + tuneX);
-	Screen menu[8]
+	int startHeight(20), startWidth(59), startY(yMax/2), startX(xMax/3 + tuneX), menuLen(8);
+	Screen menu[menuLen]
 	{
-		Screen(startY, startX, startHeight, startWidth, "start" + to_string(0)),
+		Screen(startY, startX, startHeight, startWidth, "menu/start" + to_string(0)),
 
-		Screen(startY, startX, startHeight, startWidth, "start" + to_string(1)),
+		Screen(startY, startX, startHeight, startWidth, "menu/start" + to_string(1)),
 
-		Screen(startY, startX, startHeight, startWidth, "start" + to_string(2)),
+		Screen(startY, startX, startHeight, startWidth, "menu/start" + to_string(2)),
 
-		Screen(startY, startX, startHeight, startWidth, "start" + to_string(3)),
+		Screen(startY, startX, startHeight, startWidth, "menu/start" + to_string(3)),
 	
-		Screen(startY, startX, startHeight, startWidth, "game" + to_string(0)),
+		Screen(startY, startX, startHeight, startWidth, "menu/game" + to_string(0)),
 
-		Screen(startY, startX, startHeight, startWidth, "game" + to_string(1)),
+		Screen(startY, startX, startHeight, startWidth, "menu/game" + to_string(1)),
 
-		Screen(startY, startX, startHeight, startWidth, "game" + to_string(2)),
+		Screen(startY, startX, startHeight, startWidth, "menu/game" + to_string(2)),
 
-		Screen(startY, startX, startHeight, startWidth, "game" + to_string(3))
+		Screen(startY, startX, startHeight, startWidth, "menu/game" + to_string(3))
 	};
-	for (int i = 0; i < 8; i++)
+	for (int i = 0; i < menuLen; i++)
 	{
 		hide_panel(menu[i].pan);
 	}
@@ -63,15 +66,46 @@ int main()
 	{
 		for (int i = 0; i < 8; i++)
 		{
-			menu[i].~Screen();
+			hide_panel(menu[i].pan);
 		}
-		title.~Screen();
+		hide_panel(title.pan);	
+		
+		int mapHeight(yMax - 5), mapWidth(xMax), mapY(0), mapX(0);
+		Screen maps[3]
+		{
+			Screen(mapY, mapX, mapHeight, mapWidth, "maps/map" + to_string(0)),
+
+			Screen(mapY, mapX, mapHeight, mapWidth, "maps/map" + to_string(1)),
+
+			Screen(mapY, mapX, mapHeight, mapWidth, "maps/map" + to_string(2)),
+		};
+		
+		for (int i = 0; i < 3; i++)
+		{
+			hide_panel(maps[i].pan);
+		}
+		bottom_panel(maps[0].pan);
+
+
+		int hudY(yMax - 5), hudX(0), hudHeight(5), hudWidth(xMax);
+		Screen HUD(hudY, hudX, hudHeight, hudWidth, "hud");
 
 		int baloonY(yMax/5), baloonX(xMax/5);
-
 		Player baloon(baloonY, baloonX);
+		baloon.HUD = HUD;
+
+		update_panels();
+		doupdate();
 		
-		//play(baloon);
+		if (play(baloon))
+		{
+			endwin();
+		}
+		
+		//clear();
+		//refresh();
+		
+			
 	}
 	else
 	{

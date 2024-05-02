@@ -59,7 +59,6 @@ int navigate(int _idx, Screen* _menu)
 					//showHallOfFame();
 					break;
 				case 3:
-					endwin();
 					return 0;
 				case 4:
 					return 1;
@@ -73,9 +72,18 @@ int navigate(int _idx, Screen* _menu)
 			}
 	}
 }
-/*
-int play(Player _ballon)
-{
 
+int play(Player _baloon)
+{
+	halfdelay(ovrlDel);
+
+	while (_baloon.isAlive)
+	{
+		_baloon.move();
+	}
+	//hide_panel(_baloon.pan);
+	//update_panels();
+	//doupdate();
+	return 1;
 }
-*/
+
