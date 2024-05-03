@@ -83,7 +83,7 @@ void Player::move()
 			
 			break;
 		case 1:
-			if ((x >= xMax - width + 2) or (y <= 1) or (y >= yMax - height - 6 + 1))
+			if ((x > xMax - width + 1) or (y <= 1) or (y >= yMax - height - 6 + 1))
 			{	
 				isAlive = false;
 			}
@@ -135,7 +135,7 @@ void Player::jump(int _newLocation)
 	}
 	else if (location > _newLocation)
 	{
-		x = xMax - 2 - width;
+		x = xMax - 3 - width;
 	}
 	
 	move_panel(pan, y, x);
