@@ -9,9 +9,9 @@ class Player: public Monkey
 {
 private:	
 	int points;
-	int fuel;
+	int fuelMax, fuel;
 public:
-	Player(int _y, int _x, int _h = 6, int _w = 8);
+	Player(int _y, int _x, int _h = 6, int _w = 7);
 	
 	Screen HUD;
 	Screen* MAPS;

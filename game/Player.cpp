@@ -7,7 +7,7 @@
 
 using namespace std;
 
-Player::Player(int _y, int _x, int _h, int _w): Monkey(_y, _x, _h, _w), points(0), fuel(100), isAlive(true), location(0)
+Player::Player(int _y, int _x, int _h, int _w): Monkey(_y, _x, _h, _w), points(0), fuelMax(100), fuel(fuelMax), isAlive(true), location(0)
 
 {
 	ifstream fRead;
@@ -70,7 +70,7 @@ void Player::move()
 			{	
 				isAlive = false;
 			}
-			else if (x >= xMax - width + 2)
+			else if (x > xMax - width - 1)
 			{
 				jump(1);
 			}
@@ -82,14 +82,31 @@ void Player::move()
 			}
 			
 			break;
+		case 1:
+			if ((x >= xMax - width + 2) or (y <= 1) or (y >= yMax - height - 6 + 1))
+			{	
+				isAlive = false;
+			}
+			else if (x < 0)
+			{
+				jump(0);
+			}
+			else
+			{
+				move_panel(pan, y, x);
+				update_panels();
+				doupdate();
+			}
+			
+			break;
+
 	}
 }
 
 void Player::spendFuel()
 {
 	//fuel--;
-	/*
-	for (int i = 0; i < 100; i++)
+	for (int i = 0; i < fuelMax; i++)
 	{
 		if (i < fuel)
 		{
@@ -97,12 +114,10 @@ void Player::spendFuel()
 		}
 		else
 		{
-
 			mvwprintw(HUD.win, 2, 8 + i, " ");
 		}
 	}
 	wrefresh(HUD.win);
-	*/
 }
 
 void Player::jump(int _newLocation)
@@ -116,15 +131,16 @@ void Player::jump(int _newLocation)
 	
 	if (location < _newLocation)
 	{
-		move_panel(pan, y, 2);
+		x = 2;
 	}
-	else
+	else if (location > _newLocation)
 	{
-		move_panel(pan, y, xMax - 2 - width);
+		x = xMax - 2 - width;
 	}
 	
+	move_panel(pan, y, x);
+	
 	location = _newLocation;
-
 	update_panels();
 	doupdate();
 }

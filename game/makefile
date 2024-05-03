@@ -1,7 +1,11 @@
 all: main
 
-main: main.o functions.o Monkey.o Screen.o Player.o Enemy.o 
+clean:
+	rm -rf game *.o game
+
+main: main.o functions.o globals.o Monkey.o Screen.o Player.o Enemy.o 
 	g++ -lpanel -lncurses main.o -o game
+	./game
 
 main.o: main.cpp
 	g++ -lpanel -lncurses -c  main.cpp -o main.o
@@ -24,6 +28,3 @@ globals.o: globals.cpp
 functions.o: functions.cpp
 	g++ -lpanel -lncurses -c  functions.cpp -o functions.o
 
-clean:
-	rm -r *.o
-	rm game

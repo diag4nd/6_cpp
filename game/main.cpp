@@ -71,7 +71,7 @@ int main()
 		hide_panel(title.pan);	
 		
 		// Create maps
-		int mapHeight(yMax - 5), mapWidth(xMax), mapY(0), mapX(0);
+		int mapHeight(yMax - 5), mapWidth(xMax - 1), mapY(0), mapX(0);
 		Screen MAPS[3]
 		{
 			Screen(mapY, mapX, mapHeight, mapWidth, "maps/map" + to_string(0)),
