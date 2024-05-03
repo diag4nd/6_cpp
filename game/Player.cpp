@@ -105,7 +105,7 @@ void Player::move()
 
 void Player::spendFuel()
 {
-	//fuel--;
+	fuel--;
 	for (int i = 0; i < fuelMax; i++)
 	{
 		if (i < fuel)

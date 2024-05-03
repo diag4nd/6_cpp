@@ -106,17 +106,26 @@ int main()
 
 		if (play(baloon))
 		{
-			clear();
-			refresh();
+			//clear();
+			//refresh();
+			//baloon.~Monkey();
+			/*
+			hide_panel(baloon.pan);
+			update_panels();
+			doupdate();
+			continue;
+			*/
 			endwin();
 		}
 	}
+	
 	else
 	{
 		endwin();
 	}
-	getch();
+	//getch();
 	endwin();
+
 	return 0;
 }
 

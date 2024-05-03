@@ -51,17 +51,22 @@ int navigate(int _idx, Screen* _menu)
 					navigate(choice, _menu);
 					break;
 				case 1:
-					choice = 0;
-					//showHelp();
+					navigate(choice, _menu);
 					break;
 				case 2:
-					choice = 0;
-					//showHallOfFame();
+					navigate(choice, _menu);
 					break;
 				case 3:
 					return 0;
 				case 4:
+					choice = 0;
 					return 1;
+				case 5:
+					navigate(choice, _menu);
+					break;
+				case 6:
+					navigate(choice, _menu);
+					break;
 				case 7:
 					choice = 0;
 					hide_panel(_menu[_idx].pan);
@@ -69,6 +74,7 @@ int navigate(int _idx, Screen* _menu)
 					update_panels();
 					doupdate();
 					navigate(choice, _menu);
+					break;
 			}
 	}
 }
