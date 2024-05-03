@@ -70,8 +70,9 @@ int main()
 		}
 		hide_panel(title.pan);	
 		
+		// Create maps
 		int mapHeight(yMax - 5), mapWidth(xMax), mapY(0), mapX(0);
-		Screen maps[3]
+		Screen MAPS[3]
 		{
 			Screen(mapY, mapX, mapHeight, mapWidth, "maps/map" + to_string(0)),
 
@@ -79,39 +80,43 @@ int main()
 
 			Screen(mapY, mapX, mapHeight, mapWidth, "maps/map" + to_string(2)),
 		};
-		
 		for (int i = 0; i < 3; i++)
 		{
-			hide_panel(maps[i].pan);
+			hide_panel(MAPS[i].pan);
 		}
-		bottom_panel(maps[0].pan);
-
-
+		hide_panel(MAPS[0].pan);
+		
+		// Create HUD
 		int hudY(yMax - 5), hudX(0), hudHeight(5), hudWidth(xMax);
 		Screen HUD(hudY, hudX, hudHeight, hudWidth, "hud");
-
+		hide_panel(HUD.pan);
+		
+		// Create player
 		int baloonY(yMax/5), baloonX(xMax/5);
 		Player baloon(baloonY, baloonX);
 		baloon.HUD = HUD;
+		baloon.MAPS = MAPS;
+		
+		show_panel(baloon.HUD.pan);
+		show_panel(baloon.MAPS[0].pan);
+		show_panel(baloon.pan);
 
 		update_panels();
 		doupdate();
-		
+
 		if (play(baloon))
 		{
+			clear();
+			refresh();
 			endwin();
 		}
-		
-		//clear();
-		//refresh();
-		
-			
 	}
 	else
 	{
 		endwin();
 	}
-
+	getch();
+	endwin();
 	return 0;
 }
 

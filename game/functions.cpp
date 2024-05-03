@@ -81,9 +81,7 @@ int play(Player _baloon)
 	{
 		_baloon.move();
 	}
-	//hide_panel(_baloon.pan);
-	//update_panels();
-	//doupdate();
+	
 	return 1;
 }
 
