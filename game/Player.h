@@ -9,7 +9,6 @@ class Player: public Monkey
 {
 private:	
 	int points;
-	int fuelMax, fuel;
 public:
 	Player(int _y, int _x, int _h = 6, int _w = 7);
 	
@@ -17,12 +16,14 @@ public:
 	Screen* MAPS;
 	bool isAlive;
 	int location;
+	int fuelMax, fuel;
 
 	void move();
 	void spendFuel();
 	void setHUD(Screen _HUD);
 	void setMAPS(Screen* _MAPS);
 	void jump(int _newLocation);
+	bool intersects();
 };
 
 #endif // __PLAYER_H__

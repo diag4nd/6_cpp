@@ -79,8 +79,35 @@ int navigate(int _idx, Screen* _menu)
 	}
 }
 
-int play(Player _baloon)
+void play(Player _baloon)
 {
+	for (int i = 0; i < 3; i++)
+	{
+		hide_panel(_baloon.MAPS[i].pan);
+	}
+	
+	hide_panel(_baloon.HUD.pan);
+
+	// Get screen size
+	int yMax, xMax;
+	getmaxyx(stdscr, yMax, xMax);
+
+	int baloonY(yMax/5), baloonX(xMax/5);
+	
+	_baloon.y = baloonY; 
+	_baloon.x = baloonX;
+	_baloon.location = 0;
+	_baloon.fuel = 100;
+	_baloon.isAlive = true;
+	
+	show_panel(_baloon.MAPS[_baloon.location].pan);
+	show_panel(_baloon.HUD.pan);
+	show_panel(_baloon.pan);
+
+	move_panel(_baloon.pan, _baloon.y, _baloon.x);
+	update_panels();
+	doupdate();
+
 	halfdelay(ovrlDel);
 
 	while (_baloon.isAlive)
@@ -88,6 +115,6 @@ int play(Player _baloon)
 		_baloon.move();
 	}
 	
-	return 1;
+	play(_baloon);
 }
 

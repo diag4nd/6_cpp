@@ -84,7 +84,6 @@ int main()
 		{
 			hide_panel(MAPS[i].pan);
 		}
-		hide_panel(MAPS[0].pan);
 		
 		// Create HUD
 		int hudY(yMax - 5), hudX(0), hudHeight(5), hudWidth(xMax);
@@ -104,19 +103,8 @@ int main()
 		update_panels();
 		doupdate();
 
-		if (play(baloon))
-		{
-			//clear();
-			//refresh();
-			//baloon.~Monkey();
-			/*
-			hide_panel(baloon.pan);
-			update_panels();
-			doupdate();
-			continue;
-			*/
-			endwin();
-		}
+		play(baloon);
+		
 	}
 	
 	else

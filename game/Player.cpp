@@ -4,6 +4,7 @@
 #include <fstream>
 #include <string>
 #include "Screen.h"
+#include "globals.h"
 
 using namespace std;
 
@@ -66,46 +67,33 @@ void Player::move()
 	switch (location)
 	{
 		case 0:
-			if ((x <= 1) or (y <= 1) or (y >= yMax - height - 6 + 1))
-			{	
-				isAlive = false;
-			}
-			else if (x > xMax - width - 1)
+			if (x > xMax - width - 1)
 			{
 				jump(1);
-			}
-			else
-			{
-				move_panel(pan, y, x);
-				update_panels();
-				doupdate();
-			}
-			
+			}			
 			break;
 		case 1:
-			if ((x > xMax - width + 1) or (y <= 1) or (y >= yMax - height - 6 + 1))
-			{	
-				isAlive = false;
-			}
-			else if (x < 0)
+			if (x < 0)
 			{
 				jump(0);
 			}
-			else
-			{
-				move_panel(pan, y, x);
-				update_panels();
-				doupdate();
-			}
-			
 			break;
-
 	}
+	if (intersects())
+	{
+		isAlive = false;
+	}
+	else
+	{
+		move_panel(pan, y, x);
+		update_panels();
+		doupdate();
+	}		
 }
 
 void Player::spendFuel()
 {
-	fuel--;
+	//fuel--;
 	for (int i = 0; i < fuelMax; i++)
 	{
 		if (i < fuel)
@@ -143,5 +131,35 @@ void Player::jump(int _newLocation)
 	location = _newLocation;
 	update_panels();
 	doupdate();
+}
+
+bool Player::intersects()
+{
+	ifstream fRead;
+	
+	fRead.open((".game/sprites/maps/map" + to_string(location)).c_str());
+	
+	int i = 0;
+
+	std::string line;
+	while (std::getline(fRead, line))
+	{		
+		i++;
+
+		if (i >= y + 1 and i < y + height + 1)
+		{
+			for (int j = x - 1; j < x + width; j++)
+			{
+				if (line[j] == '#')
+				{
+					return true;
+				}
+			}
+		}
+	}	
+
+	fRead.close();
+	
+	return false;
 }
 
