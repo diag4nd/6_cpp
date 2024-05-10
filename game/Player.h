@@ -14,9 +14,13 @@ public:
 	
 	Screen HUD;
 	Screen* MAPS;
+	Screen* END;
+
 	bool isAlive;
 	int location;
 	int fuelMax, fuel;
+	int mapLen;
+	int endLen;
 
 	void move();
 	void spendFuel();

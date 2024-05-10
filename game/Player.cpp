@@ -35,7 +35,7 @@ void Player::move()
 		case 'a':
 			if (fuel)
 			{
-				x-=2;
+				x-=3;
 				y+=1;
 				spendFuel();
 			}
@@ -45,7 +45,7 @@ void Player::move()
 		case 'd':
 			if (fuel)
 			{
-				x+=2;
+				x+=3;
 				y+=1;
 				spendFuel();
 			}
@@ -77,7 +77,38 @@ void Player::move()
 			{
 				jump(0);
 			}
+			else if (x > xMax - width - 1)
+			{
+				jump(2);
+			}
+			else if (y < 0)
+			{
+				jump(4);
+			}
+			else if (y >= yMax - height + 1 - 5)
+			{
+				jump(3);
+			}
 			break;
+		case 2:
+			if (x < 0)
+			{
+				jump(1);
+			}
+			break;
+		case 3:
+			if (y < 0)
+			{
+				jump(1);
+			}
+			break;
+		case 4:
+			if (y >= yMax - height + 1 - 5)
+			{
+				jump(1);
+			}
+			break;
+
 	}
 	if (intersects())
 	{
@@ -117,14 +148,31 @@ void Player::jump(int _newLocation)
 	show_panel(MAPS[_newLocation].pan);
 	show_panel(pan);
 	
-	if (location < _newLocation)
+	if (location - _newLocation == -1)
 	{
 		x = 2;
 	}
-	else if (location > _newLocation)
+	else if (location - _newLocation == 1)
 	{
 		x = xMax - 3 - width;
 	}
+	else if (location - _newLocation == -2)
+	{
+		y = 1;
+	}
+	else if (location - _newLocation == 2)
+	{
+		y = yMax - 3 - height - 5;
+	}
+	else if (location - _newLocation == -3)
+	{
+		y = yMax - 3 - height - 5;
+	}
+	else if (location - _newLocation == 3)
+	{
+		y = 1;
+	}
+
 	
 	move_panel(pan, y, x);
 	
