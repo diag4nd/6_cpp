@@ -85,14 +85,7 @@ void play(Player _baloon)
 	{
 		hide_panel(_baloon.MAPS[i].pan);
 	}
-	//
-	/*	
-	for (int i = 0; i < _baloon.endLen; i++)
-	{
-		hide_panel(_baloon.END[i].pan);
-	}*/
-	//
-	
+		
 	hide_panel(_baloon.HUD.pan);
 
 	// Get screen size
@@ -122,44 +115,5 @@ void play(Player _baloon)
 		_baloon.move();
 	}
 	
-	play(_baloon);
-	//
-	/*
-	gameOver(0, _baloon);
-	*/
-	//
+	play(_baloon);	
 }
-
-//
-/*
-void gameOver(int _idx, Player _baloon)
-{
-	show_panel(_baloon.END[_idx].pan);
-	update_panels();
-	doupdate();
-
-	switch (getch())
-	{
-		case KEY_DOWN:
-		case 's':
-		case KEY_UP:
-		case 'w':
-			hide_panel(_baloon.END[_idx].pan);
-			gameOver((_idx + 1)%2, _baloon);
-			break;
-		case 10:
-		case ' ':
-			if (_idx == 0)
-			{
-				play(_baloon);
-			}
-			else
-			{
-				choice  = 0;
-				navigate(choice, _baloon.MENU);
-			}
-	}
-
-}
-*/
-//

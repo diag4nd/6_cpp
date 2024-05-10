@@ -59,7 +59,14 @@ void Player::move()
 				spendFuel();
 			}
 			break;
-			
+		case KEY_DOWN:
+		case 's':
+			if (fuel)
+			{
+				y+=2;
+				spendFuel();
+			}
+			break;	
 		case ERR:
 			y+=1;
 			break;

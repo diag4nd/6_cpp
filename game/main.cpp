@@ -94,36 +94,11 @@ int main()
 		Screen HUD(hudY, hudX, hudHeight, hudWidth, "hud");
 		hide_panel(HUD.pan);
 		
-		//
-		/*
-		// Create game over panel
-		int endHeight(9), endWidth(29), endY(yMax/2), endX(xMax/3), endLen(2);	
-		Screen end[endLen]
-		{
-			Screen(endY, endX, endHeight, endWidth, "gameover/" + to_string(0)),
-
-			Screen(endY, endX, endHeight, endWidth, "gameover/" + to_string(1))
-		};
-
-		for (int i = 0; i < endLen; i++)
-		{
-			hide_panel(end[i].pan);
-		}
-		*/
-		//
-
 		// Create player
 		int baloonY(yMax/5), baloonX(xMax/5);
 		Player baloon(baloonY, baloonX);
 		baloon.HUD = HUD;
 		baloon.MAPS = MAPS;
-		//
-		/*
-		baloon.END = END;
-		baloon.mapLen = mapLen;
-		baloon.endLen = endLen; 
-		*/
-		//
 		
 		show_panel(baloon.MAPS[0].pan);
 		show_panel(baloon.pan);
@@ -132,14 +107,11 @@ int main()
 		doupdate();
 
 		play(baloon);
-		
 	}
-	
 	else
 	{
 		endwin();
 	}
-	//getch();
 	endwin();
 
 	return 0;
