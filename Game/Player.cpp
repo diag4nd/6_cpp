@@ -35,7 +35,7 @@ void Player::move()
 		case 'a':
 			if (fuel)
 			{
-				x-=2;
+				x-=3;
 				y+=1;
 				spendFuel();
 			}
@@ -45,7 +45,7 @@ void Player::move()
 		case 'd':
 			if (fuel)
 			{
-				x+=2;
+				x+=3;
 				y+=1;
 				spendFuel();
 			}

@@ -171,7 +171,7 @@ void gameOver(Player _baloon)
 					play(_baloon);
 					break;
 				case 1:
-					hide_panel(_baloon.END[_baloon.choice].pan);
+					hide_panel(_baloon.END[_baloon.choice].pan);	
 					hide_panel(_baloon.MAPS[_baloon.location].pan);
 					hide_panel(_baloon.HUD.pan);
 					hide_panel(_baloon.pan);
