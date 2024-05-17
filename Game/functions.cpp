@@ -48,13 +48,19 @@ void navigate(Player _baloon)
 					show_panel(_baloon.MENU[_baloon.choice].pan);
 					update_panels();
 					doupdate();
+					
 					navigate(_baloon);
 					break;
 				case 1:
 					navigate(_baloon);
 					break;
 				case 2:
-					navigate(_baloon);
+					hide_panel(_baloon.MENU[_baloon.choice].pan);
+					show_panel(_baloon.HALL.pan);
+					update_panels();
+					doupdate();
+
+					hallOfFame(_baloon);
 					break;
 				case 3:
 					endwin();
@@ -74,6 +80,7 @@ void navigate(Player _baloon)
 					show_panel(_baloon.MENU[_baloon.choice].pan);
 					update_panels();
 					doupdate();
+					
 					navigate(_baloon);
 					break;
 			}
@@ -123,7 +130,6 @@ void play(Player _baloon)
 	doupdate();
 
 	gameOver(_baloon);
-	//play(_baloon);	
 }
 
 void gameOver(Player _baloon)
@@ -179,5 +185,26 @@ void gameOver(Player _baloon)
 			break;
 	}
 
+}
+
+void hallOfFame(Player _baloon)
+{	
+	raw();
+	switch (getch())
+	{
+		case KEY_BACKSPACE:
+			hide_panel(_baloon.HALL.pan);
+			_baloon.choice = 0;
+			show_panel(_baloon.MENU[_baloon.choice].pan);
+			update_panels();
+			doupdate();
+			
+			navigate(_baloon);
+			break;
+
+		default:
+			hallOfFame(_baloon);
+			break;
+	}
 }
 

@@ -17,6 +17,7 @@ public:
 	Screen HUD;
 	Screen* MAPS;
 	Screen* END;
+	Screen HALL;
 
 	int choice;
 	bool isAlive;
