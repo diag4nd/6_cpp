@@ -31,27 +31,24 @@ void Player::move()
 
 	switch (getch())
 	{
-		case KEY_LEFT:
 		case 'a':
 			if (fuel)
 			{
-				x-=3;
+				x-=2;
 				y+=1;
 				spendFuel();
 			}
 			break;
 
-		case KEY_RIGHT:
 		case 'd':
 			if (fuel)
 			{
-				x+=3;
+				x+=2;
 				y+=1;
 				spendFuel();
 			}
 			break;
 
-		case KEY_UP:
 		case 'w':
 			if (fuel)
 			{
@@ -59,14 +56,25 @@ void Player::move()
 				spendFuel();
 			}
 			break;
-		case KEY_DOWN:
-		case 's':
+		
+		case 'q':
 			if (fuel)
 			{
-				y+=2;
+				y-=2;
+				x-=2;
 				spendFuel();
 			}
-			break;	
+			break;
+
+		case 'e':
+			if (fuel)
+			{
+				y-=2;
+				x+=2;
+				spendFuel();
+			}
+			break;
+
 		case ERR:
 			y+=1;
 			break;
@@ -131,7 +139,7 @@ void Player::move()
 
 void Player::spendFuel()
 {
-	//fuel--;
+	fuel--;
 	for (int i = 0; i < fuelMax; i++)
 	{
 		if (i < fuel)

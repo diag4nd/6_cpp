@@ -9,7 +9,7 @@
 #include "Monkey.cpp"
 #include "Screen.cpp"
 #include "Player.cpp"
-#include "Enemy.cpp"
+#include "Object.cpp"
 
 using namespace std;
 
@@ -56,7 +56,7 @@ int main()
 	}
 
 	// Create MAPS
-	int mapHeight(yMax - 5), mapWidth(xMax - 1), mapY(0), mapX(0), mapLen = 5;
+	int mapHeight(yMax - 5), mapWidth(xMax - 1), mapY(0), mapX(0), mapLen(5);
 	Screen MAPS[mapLen]
 	{
 		Screen(mapY, mapX, mapHeight, mapWidth, "maps/map" + to_string(0)),
@@ -73,7 +73,17 @@ int main()
 	{
 		hide_panel(MAPS[i].pan);
 	}
-		
+	/* TODO	
+	// Create BANANAS
+	int objHeight(1), objWidth(1), objLen(2);
+	Object BANANAS[objLen]
+	{
+
+	}
+
+
+	// Create FUELS
+	*/
 	// Create HUD
 	int hudY(yMax - 5), hudX(0), hudHeight(5), hudWidth(xMax);
 	Screen HUD(hudY, hudX, hudHeight, hudWidth, "hud");

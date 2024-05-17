@@ -19,6 +19,8 @@ public:
 	Screen* END;
 	Screen HALL;
 	Screen HELP;
+	Screen* BANANAS;
+	Screen* FUELS;
 
 	int choice;
 	bool isAlive;
