@@ -52,7 +52,12 @@ void navigate(Player _baloon)
 					navigate(_baloon);
 					break;
 				case 1:
-					navigate(_baloon);
+					hide_panel(_baloon.MENU[_baloon.choice].pan);
+					show_panel(_baloon.HELP.pan);
+					update_panels();
+					doupdate();
+
+					help(_baloon);
 					break;
 				case 2:
 					hide_panel(_baloon.MENU[_baloon.choice].pan);
@@ -208,3 +213,23 @@ void hallOfFame(Player _baloon)
 	}
 }
 
+void help(Player _baloon)
+{	
+	raw();
+	switch (getch())
+	{
+		case KEY_BACKSPACE:
+			hide_panel(_baloon.HELP.pan);
+			_baloon.choice = 0;
+			show_panel(_baloon.MENU[_baloon.choice].pan);
+			update_panels();
+			doupdate();
+			
+			navigate(_baloon);
+			break;
+
+		default:
+			help(_baloon);
+			break;
+	}
+}

@@ -93,9 +93,14 @@ int main()
 	}
 	
 	// Create HALL
-	int hallY(yMax/4), hallX(xMax/5), hallHeight(23), hallWidth(93);
+	int hallY(yMax/4), hallX(xMax/5 + 6), hallHeight(23), hallWidth(93);
 	Screen HALL(hallY, hallX, hallHeight, hallWidth, "top10");
 	hide_panel(HALL.pan);
+	
+	// Create HELP
+	int helpY(yMax/4 - 5), helpX(xMax/5 + 4), helpHeight(35), helpWidth(100);
+	Screen HELP(helpY, helpX, helpHeight, helpWidth, "help");
+	hide_panel(HELP.pan);
 
 	// Create PLAYER
 	int baloonY(yMax/5), baloonX(xMax/5);
@@ -108,6 +113,7 @@ int main()
 	baloon.MENU = MENU;
 	baloon.END = END;
 	baloon.HALL = HALL;
+	baloon.HELP = HELP;
 
 	// Setting what user observes
 	show_panel(baloon.TITLE.pan);

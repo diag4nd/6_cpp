@@ -35,7 +35,7 @@ void Player::move()
 		case 'a':
 			if (fuel)
 			{
-				x-=3;
+				x-=2;
 				y+=1;
 				spendFuel();
 			}
@@ -45,7 +45,7 @@ void Player::move()
 		case 'd':
 			if (fuel)
 			{
-				x+=3;
+				x+=2;
 				y+=1;
 				spendFuel();
 			}
@@ -90,11 +90,11 @@ void Player::move()
 			}
 			else if (y < 0)
 			{
-				jump(4);
+				jump(3);
 			}
 			else if (y >= yMax - height + 1 - 5)
 			{
-				jump(3);
+				jump(4);
 			}
 			break;
 		case 2:
@@ -103,13 +103,13 @@ void Player::move()
 				jump(1);
 			}
 			break;
-		case 3:
+		case 4:
 			if (y < 0)
 			{
 				jump(1);
 			}
 			break;
-		case 4:
+		case 3:
 			if (y >= yMax - height + 1 - 5)
 			{
 				jump(1);
@@ -163,19 +163,19 @@ void Player::jump(int _newLocation)
 	{
 		x = xMax - 3 - width;
 	}
-	else if (location - _newLocation == -2)
+	else if (location - _newLocation == 2)
 	{
 		y = 1;
 	}
-	else if (location - _newLocation == 2)
-	{
-		y = yMax - 3 - height - 5;
-	}
-	else if (location - _newLocation == -3)
+	else if (location - _newLocation == -2)
 	{
 		y = yMax - 3 - height - 5;
 	}
 	else if (location - _newLocation == 3)
+	{
+		y = yMax - 3 - height - 5;
+	}
+	else if (location - _newLocation == -3)
 	{
 		y = 1;
 	}
