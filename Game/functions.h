@@ -1,12 +1,11 @@
 #ifndef __FUNCTIONS_H__
 #define __FUNCTIONS_H__
 
-#include "Screen.h"
+#include "Player.h"
 
 int main();
-int navigate(int _idx, Screen* _menu);	// Show start menu with 4 options
-void play();
-void leaderboards();
-//void gameOver(int _idx, Player _baloon);
+void navigate(Player _baloon);	// Show start menu with 4 options
+void play(Player _baloon);
+void gameOver(Player _baloon);
 
 #endif // __FUNCTIONS_H__

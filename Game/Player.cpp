@@ -8,7 +8,7 @@
 
 using namespace std;
 
-Player::Player(int _y, int _x, int _h, int _w): Monkey(_y, _x, _h, _w), points(0), fuelMax(100), fuel(fuelMax), isAlive(true), location(0)
+Player::Player(int _y, int _x, int _h, int _w): Monkey(_y, _x, _h, _w), points(0), fuelMax(100), fuel(fuelMax), isAlive(true), location(0), choice(0)
 
 {
 	ifstream fRead;
@@ -218,3 +218,25 @@ bool Player::intersects()
 	return false;
 }
 
+void Player::hideAll()
+{
+	hide_panel(TITLE.pan);
+
+	for (int i = 0; i < menuLen; i++)
+	{
+		hide_panel(MENU[i].pan);
+	}
+	
+	for (int i = 0; i < mapsLen; i++)
+	{
+		hide_panel(MAPS[i].pan);
+	}
+	
+	for (int i = 0; i < endLen; i++)
+	{
+		hide_panel(END[i].pan);
+	}
+
+	hide_panel(HUD.pan);
+	hide_panel(pan);	
+}

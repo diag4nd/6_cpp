@@ -4,90 +4,91 @@
 #include "Screen.h"
 #include "Player.h"
 
-
-int navigate(int _idx, Screen* _menu)
+void navigate(Player _baloon)
 {	
+	raw();
 	switch (getch())
 	{
 		case KEY_DOWN:
 		case 's':
-			choice = (1 + choice)%4 + choice/4 * 4;
-			hide_panel(_menu[_idx].pan);
-			show_panel(_menu[choice].pan);
+			hide_panel(_baloon.MENU[_baloon.choice].pan);
+			_baloon.choice = (1 + _baloon.choice)%4 + _baloon.choice/4 * 4;
+			show_panel(_baloon.MENU[_baloon.choice].pan);
 			update_panels();
 			doupdate();
-			navigate(choice, _menu);
+			navigate(_baloon);
 			break;
 
 		case KEY_UP:	
-		case 'w':
-			choice = (3 + choice)%4 + choice/4 * 4;
-			hide_panel(_menu[_idx].pan);
-			show_panel(_menu[choice].pan);
+		case 'w':	
+			hide_panel(_baloon.MENU[_baloon.choice].pan);
+			_baloon.choice = (3 + _baloon.choice)%4 + _baloon.choice/4 * 4;
+			show_panel(_baloon.MENU[_baloon.choice].pan);
 			update_panels();
 			doupdate();
-			navigate(choice, _menu);
+			navigate(_baloon);
 			break;
 
 		case KEY_BACKSPACE:
-			choice = 3 + choice/4 * 4;
-			hide_panel(_menu[_idx].pan);
-			show_panel(_menu[choice].pan);
+			hide_panel(_baloon.MENU[_baloon.choice].pan);
+			_baloon.choice = 3 + _baloon.choice/4 * 4;
+			show_panel(_baloon.MENU[_baloon.choice].pan);
 			update_panels();
 			doupdate();
-			navigate(choice, _menu);
+			navigate(_baloon);
 			break;
 
 		case 10:
 		case ' ':
-			switch (choice)
+			switch (_baloon.choice)
 			{
 				case 0:
-					choice = 4;
-					hide_panel(_menu[_idx].pan);
-					show_panel(_menu[choice].pan);
+					hide_panel(_baloon.MENU[_baloon.choice].pan);
+					_baloon.choice = 4;
+					show_panel(_baloon.MENU[_baloon.choice].pan);
 					update_panels();
 					doupdate();
-					navigate(choice, _menu);
+					navigate(_baloon);
 					break;
 				case 1:
-					navigate(choice, _menu);
+					navigate(_baloon);
 					break;
 				case 2:
-					navigate(choice, _menu);
+					navigate(_baloon);
 					break;
 				case 3:
-					return 0;
+					endwin();
+					return;
 				case 4:
-					choice = 0;
-					return 1;
+					play(_baloon);
+					break;
 				case 5:
-					navigate(choice, _menu);
+					navigate(_baloon);
 					break;
 				case 6:
-					navigate(choice, _menu);
+					navigate(_baloon);
 					break;
 				case 7:
-					choice = 0;
-					hide_panel(_menu[_idx].pan);
-					show_panel(_menu[choice].pan);
+					hide_panel(_baloon.MENU[_baloon.choice].pan);
+					_baloon.choice = 0;
+					show_panel(_baloon.MENU[_baloon.choice].pan);
 					update_panels();
 					doupdate();
-					navigate(choice, _menu);
+					navigate(_baloon);
 					break;
 			}
+			break;
+		default:
+			navigate(_baloon);
+			break;
 	}
+
 }
 
 void play(Player _baloon)
 {
-	for (int i = 0; i < _baloon.mapLen; i++)
-	{
-		hide_panel(_baloon.MAPS[i].pan);
-	}
-		
-	hide_panel(_baloon.HUD.pan);
-
+	hide_panel(_baloon.MENU[_baloon.choice].pan);
+	
 	// Get screen size
 	int yMax, xMax;
 	getmaxyx(stdscr, yMax, xMax);
@@ -114,12 +115,69 @@ void play(Player _baloon)
 	{
 		_baloon.move();
 	}
-	
-	play(_baloon);	
+
+	nocbreak();
+	_baloon.choice  = 0;
+	show_panel(_baloon.END[_baloon.choice].pan);
+	update_panels();
+	doupdate();
+
+	gameOver(_baloon);
+	//play(_baloon);	
 }
-/*
-void leaderboards();
-{
-	
+
+void gameOver(Player _baloon)
+{	
+	raw();
+	switch (getch())
+	{
+		case KEY_DOWN:
+		case 's':
+			hide_panel(_baloon.END[_baloon.choice].pan);
+			_baloon.choice = not _baloon.choice;
+			show_panel(_baloon.END[_baloon.choice].pan);
+			update_panels();
+			doupdate();
+			gameOver(_baloon);
+			break;
+
+		case KEY_UP:
+		case 'w':	
+			hide_panel(_baloon.END[_baloon.choice].pan);
+			_baloon.choice = not _baloon.choice;
+			show_panel(_baloon.END[_baloon.choice].pan);
+			update_panels();
+			doupdate();
+			gameOver(_baloon);
+			break;
+
+		case 10:
+		case ' ':
+			switch (_baloon.choice)
+			{
+				case 0:
+					hide_panel(_baloon.END[_baloon.choice].pan);
+					play(_baloon);
+					break;
+				case 1:
+					hide_panel(_baloon.END[_baloon.choice].pan);
+					hide_panel(_baloon.MAPS[_baloon.location].pan);
+					hide_panel(_baloon.HUD.pan);
+					hide_panel(_baloon.pan);
+					
+					_baloon.choice = 0;
+					show_panel(_baloon.MENU[_baloon.choice].pan);
+					update_panels();
+					doupdate();
+
+					navigate(_baloon);
+					break;
+			}
+			break;
+		default:
+			gameOver(_baloon);
+			break;
+	}
+
 }
-*/
+

@@ -16,24 +16,23 @@ using namespace std;
 int main()
 {		
 	// Setting initial parameters
-	choice = 0;
 	initscr();
 	noecho();			// To not see what user types
 	curs_set(0);			// To make cursor invincible
 	keypad(stdscr, true);		// To work with arrows
-	raw();
 
 	// Get screen size
 	int yMax, xMax;
 	getmaxyx(stdscr, yMax, xMax);
 
-	// Create title panel
+	// Create TITLE panel
 	int titleHeight(10), titleWidth(59), titleY(yMax/4), titleX(xMax/3);	
-	Screen title(titleY, titleX, titleHeight, titleWidth, "title");
+	Screen TITLE(titleY, titleX, titleHeight, titleWidth, "title");
+	hide_panel(TITLE.pan);
 	
-	// Create menu panel	
-	int startHeight(20), startWidth(59), startY(yMax/2), startX(xMax/3 + tuneX), menuLen(8);
-	Screen menu[menuLen]
+	// Create MENU panel	
+	int startHeight(20), startWidth(59), startY(yMax/2), startX(xMax/3 + tuneX + 5), menuLen(8);
+	Screen MENU[menuLen]
 	{
 		Screen(startY, startX, startHeight, startWidth, "menu/start" + to_string(0)),
 
@@ -53,67 +52,65 @@ int main()
 	};
 	for (int i = 0; i < menuLen; i++)
 	{
-		hide_panel(menu[i].pan);
+		hide_panel(MENU[i].pan);
+	}
+
+	// Create MAPS
+	int mapHeight(yMax - 5), mapWidth(xMax - 1), mapY(0), mapX(0), mapLen = 5;
+	Screen MAPS[mapLen]
+	{
+		Screen(mapY, mapX, mapHeight, mapWidth, "maps/map" + to_string(0)),
+
+		Screen(mapY, mapX, mapHeight, mapWidth, "maps/map" + to_string(1)),
+
+		Screen(mapY, mapX, mapHeight, mapWidth, "maps/map" + to_string(2)),
+			
+		Screen(mapY, mapX, mapHeight, mapWidth, "maps/map" + to_string(3)),
+			
+		Screen(mapY, mapX, mapHeight, mapWidth, "maps/map" + to_string(4))
+	};	
+	for (int i = 0; i < mapLen; i++)
+	{
+		hide_panel(MAPS[i].pan);
+	}
+		
+	// Create HUD
+	int hudY(yMax - 5), hudX(0), hudHeight(5), hudWidth(xMax);
+	Screen HUD(hudY, hudX, hudHeight, hudWidth, "hud");
+	hide_panel(HUD.pan);
+	
+	// Create END menu
+	int endHeight(10), endWidth(29), endY(yMax/3 + tuneY), endX(xMax/3 + tuneX + 3), endLen = 2;
+	Screen END[endLen]
+	{
+		Screen(endY, endX, endHeight, endWidth, "gameover/end" + to_string(0)),
+
+		Screen(endY, endX, endHeight, endWidth, "gameover/end" + to_string(1))
+	};	
+	for (int i = 0; i < endLen; i++)
+	{
+		hide_panel(END[i].pan);
 	}
 	
+	// Create PLAYER
+	int baloonY(yMax/5), baloonX(xMax/5);
+	Player baloon(baloonY, baloonX);
+	hide_panel(baloon.pan);
 	
+	baloon.HUD = HUD;
+	baloon.MAPS = MAPS;
+	baloon.TITLE = TITLE;
+	baloon.MENU = MENU;
+	baloon.END = END;
+
 	// Setting what user observes
-	show_panel(menu[0].pan);
+	show_panel(baloon.TITLE.pan);
+	show_panel(baloon.MENU[0].pan);
 	update_panels();
 	doupdate();
 	
-	if (navigate(choice, menu))
-	{
-		for (int i = 0; i < 8; i++)
-		{
-			hide_panel(menu[i].pan);
-		}
-		hide_panel(title.pan);	
-		
-		// Create maps
-		int mapHeight(yMax - 5), mapWidth(xMax - 1), mapY(0), mapX(0), mapLen = 5;
-		Screen MAPS[mapLen]
-		{
-			Screen(mapY, mapX, mapHeight, mapWidth, "maps/map" + to_string(0)),
-
-			Screen(mapY, mapX, mapHeight, mapWidth, "maps/map" + to_string(1)),
-
-			Screen(mapY, mapX, mapHeight, mapWidth, "maps/map" + to_string(2)),
-			
-			Screen(mapY, mapX, mapHeight, mapWidth, "maps/map" + to_string(3)),
-			
-			Screen(mapY, mapX, mapHeight, mapWidth, "maps/map" + to_string(4)),
-		};
-		for (int i = 0; i < mapLen; i++)
-		{
-			hide_panel(MAPS[i].pan);
-		}
-		
-		// Create HUD
-		int hudY(yMax - 5), hudX(0), hudHeight(5), hudWidth(xMax);
-		Screen HUD(hudY, hudX, hudHeight, hudWidth, "hud");
-		hide_panel(HUD.pan);
-		
-		// Create player
-		int baloonY(yMax/5), baloonX(xMax/5);
-		Player baloon(baloonY, baloonX);
-		baloon.HUD = HUD;
-		baloon.MAPS = MAPS;
-		
-		show_panel(baloon.MAPS[0].pan);
-		show_panel(baloon.pan);
-
-		update_panels();
-		doupdate();
-
-		play(baloon);
-	}
-	else
-	{
-		endwin();
-	}
+	navigate(baloon);
 	endwin();
-
 	return 0;
 }
 
