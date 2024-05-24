@@ -149,7 +149,7 @@ void Player::move()
 
 void Player::spendFuel()
 {
-//	fuel -= 1;
+	fuel -= 1;
 	updateFuel();
 }
 
