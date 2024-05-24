@@ -141,12 +141,16 @@ int main()
 		hide_panel(BANANAS_3[i].pan);
 	}
 
-	int bananaLen_4(2);
+	int bananaLen_4(4);
 	Banana BANANAS_4[bananaLen_4]
 	{
-		Banana(0, 0, bananaHeight, bananaWidth, "banana"),
+		Banana(7, 13, bananaHeight, bananaWidth, "banana"),
+		
+		Banana(41, 75, bananaHeight, bananaWidth, "banana"),
+		
+		Banana(7, 163, bananaHeight, bananaWidth, "banana"),
 
-		Banana(0, 1, bananaHeight, bananaWidth, "banana")
+		Banana(18, 117, bananaHeight, bananaWidth, "banana")
 	};
 	
 	for (int i = 0; i < bananaLen_4; i++)
@@ -180,10 +184,10 @@ int main()
 		hide_panel(FUELS_1[i].pan);
 	}
 
-	int fuelLen_2(2);
+	int fuelLen_2(1);
 	Fuel FUELS_2[fuelLen_2]
 	{
-		Fuel(0, 0, fuelHeight, fuelWidth, "fuel"),
+		//Fuel(0, 0, fuelHeight, fuelWidth, "fuel"),
 
 		Fuel(46, 72, fuelHeight, fuelWidth, "fuel")
 	};
@@ -207,9 +211,9 @@ int main()
 	int fuelLen_4(2);
 	Fuel FUELS_4[fuelLen_4]
 	{
-		Fuel(0, 0, fuelHeight, fuelWidth, "fuel"),
+		Fuel(10, 118, fuelHeight, fuelWidth, "fuel"),
 
-		Fuel(0, 1, fuelHeight, fuelWidth, "fuel")
+		Fuel(42, 11, fuelHeight, fuelWidth, "fuel")
 	};
 	for (int i = 0; i < fuelLen_4; i++)
 	{
@@ -217,7 +221,6 @@ int main()
 	}
 	
 	// Create FINISH FLAG
-	// TODO
 	int finishHeight(7), finishWidth(10), finishY(26), finishX(155);	
 	Screen FINISH(finishY, finishX, finishHeight, finishWidth, "finish");
 	hide_panel(FINISH.pan);

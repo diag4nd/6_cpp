@@ -49,6 +49,7 @@ public:
 	void spendFuel();
 	void updateFuel();
 	void updatePoints();
+	void updateHALL();
 	void setHUD(Screen _HUD);
 	void setMAPS(Screen* _MAPS);
 	void jump(int _newLocation);

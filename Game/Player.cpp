@@ -184,6 +184,20 @@ void Player::updatePoints()
 	wrefresh(HUD.win);
 }
 
+void Player::updateHALL()
+{
+	ifstream fRead;
+	string line;
+	int idx = 0;
+	fRead.open(".game/sprites/top10");
+	while (getline(fRead, line))
+	{
+		mvwprintw(HALL.win, idx, 0, line.c_str());
+		idx++;
+	}
+	fRead.close();
+	wrefresh(HALL.win);
+}
 
 void Player::jump(int _newLocation)
 {
@@ -488,7 +502,6 @@ bool Player::intersects()
 						}
 						if ((i == FINISH.y) and (j == FINISH.x))
 						{
-							//TODO
 							choice = 0;
 							show_panel(END[2 + choice].pan);
 							update_panels();

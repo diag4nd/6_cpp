@@ -396,14 +396,9 @@ void save(Player _baloon)
 	echo();
 	char str[23];
 	mvwgetstr(_baloon.END[4].win, 5, 3, str);
-	//clear();
-	//printw(str);
-	//refresh();
-	getch();
 	
 	hide_panel(_baloon.END[_baloon.choice].pan);
 	
-	//hide_panel(_baloon.END[2 + _baloon.choice].pan);
 	hide_panel(_baloon.FINISH.pan);
 	hide_panel(_baloon.MAPS[_baloon.location].pan);
 	hide_panel(_baloon.HUD.pan);
@@ -459,10 +454,4 @@ void save(Player _baloon)
 	doupdate();
 	
 	navigate(_baloon);
-
-	
-	//update_panels();
-	//doupdate();
-	//_baloon.choice = 0;
-	//navigate(_baloon);
 }
