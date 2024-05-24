@@ -9,6 +9,8 @@ void play(Player _baloon);
 void gameOver(Player _baloon);
 void hallOfFame(Player _baloon);
 void help(Player _baloon);
+void finish(Player _baloon);
+void save(Player _baloon);
 
 
 #endif // __FUNCTIONS_H__

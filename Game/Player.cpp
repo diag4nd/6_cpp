@@ -9,8 +9,7 @@
 
 using namespace std;
 
-Player::Player(int _y, int _x, int _h, int _w): Monkey(_y, _x, _h, _w), points(0), fuelMax(100), fuel(fuelMax), isAlive(true), location(0), choice(0)
-
+Player::Player(int _y, int _x, int _h, int _w): Monkey(_y, _x, _h, _w), points(0), fuelMax(100), fuel(fuelMax), isAlive(true), location(0), choice(0), attempts(0), bananasFound(0)
 {
 	for (int i = 0; i < 5; i++)
 	{
@@ -150,7 +149,7 @@ void Player::move()
 
 void Player::spendFuel()
 {
-	fuel -= 1;
+//	fuel -= 1;
 	updateFuel();
 }
 
@@ -216,6 +215,8 @@ void Player::jump(int _newLocation)
 			}
 			break;
 		case 2:
+			// TODO
+			hide_panel(FINISH.pan);
 			for (int i = 0; i < bananaLen[2]; i++)
 			{
 				hide_panel(BANANAS_2[i].pan);
@@ -284,6 +285,8 @@ void Player::jump(int _newLocation)
 			}
 			break;
 		case 2:
+			// TODO
+			show_panel(FINISH.pan);
 			for (int i = 0; i < bananaLen[2]; i++)
 			{
 				if (BANANAS_2[i].isActive)
@@ -349,11 +352,11 @@ void Player::jump(int _newLocation)
 	}
 	else if (location - _newLocation == -2)
 	{
-		y = yMax - 3 - height - 5;
+		y = yMax - 3 - height - 4;
 	}
 	else if (location - _newLocation == 3)
 	{
-		y = yMax - 3 - height - 5;
+		y = yMax - 3 - height - 4;
 	}
 	else if (location - _newLocation == -3)
 	{
@@ -407,6 +410,7 @@ bool Player::intersects()
 						{
 							if (BANANAS_0[k].isActive)
 							{
+								bananasFound += 1;
 								points += BANANAS_0[k].reward;
 								BANANAS_0[k].isActive = false;
 								updatePoints();
@@ -482,6 +486,16 @@ bool Player::intersects()
 								doupdate();
 							}
 						}
+						if ((i == FINISH.y) and (j == FINISH.x))
+						{
+							//TODO
+							choice = 0;
+							show_panel(END[2 + choice].pan);
+							update_panels();
+							doupdate();
+							finish(*this);
+						}
+
 						break;
 					case 3:
 						if ((j == BANANAS_3[k].x) and (i == BANANAS_3[k].y))
@@ -538,7 +552,7 @@ bool Player::intersects()
 						}
 						break;
 				}
-			}
+			}			
 		}
 	}
 	

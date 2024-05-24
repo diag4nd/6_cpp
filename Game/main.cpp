@@ -78,10 +78,12 @@ int main()
 	// Create BANANAS
 	int bananaHeight(1), bananaWidth(1);
 	
-	int bananaLen_0(2);
+	int bananaLen_0(3);
 	Banana BANANAS_0[bananaLen_0]
 	{
 		Banana(8, 54, bananaHeight, bananaWidth, "banana"),
+		
+		Banana(31, 169, bananaHeight, bananaWidth, "banana"),
 
 		Banana(44, 7, bananaHeight, bananaWidth, "banana")
 	};
@@ -93,9 +95,9 @@ int main()
 	int bananaLen_1(2);
 	Banana BANANAS_1[bananaLen_1]
 	{
-		Banana(0, 0, bananaHeight, bananaWidth, "banana"),
+		Banana(28, 152, bananaHeight, bananaWidth, "banana"),
 
-		Banana(0, 1, bananaHeight, bananaWidth, "banana")
+		Banana(11, 48, bananaHeight, bananaWidth, "banana")
 	};
 	
 	for (int i = 0; i < bananaLen_1; i++)
@@ -106,9 +108,9 @@ int main()
 	int bananaLen_2(2);
 	Banana BANANAS_2[bananaLen_2]
 	{
-		Banana(0, 0, bananaHeight, bananaWidth, "banana"),
+		Banana(7, 134, bananaHeight, bananaWidth, "banana"),
 
-		Banana(0, 1, bananaHeight, bananaWidth, "banana")
+		Banana(46, 18, bananaHeight, bananaWidth, "banana")
 	};
 	
 	for (int i = 0; i < bananaLen_2; i++)
@@ -116,12 +118,22 @@ int main()
 		hide_panel(BANANAS_2[i].pan);
 	}
 	
-	int bananaLen_3(2);
+	int bananaLen_3(7);
 	Banana BANANAS_3[bananaLen_3]
 	{
-		Banana(0, 0, bananaHeight, bananaWidth, "banana"),
-
-		Banana(0, 1, bananaHeight, bananaWidth, "banana")
+		Banana(16, 150, bananaHeight, bananaWidth, "banana"),
+		
+		Banana(14, 157, bananaHeight, bananaWidth, "banana"),
+		
+		Banana(17, 165, bananaHeight, bananaWidth, "banana"),
+		
+		Banana(20, 157, bananaHeight, bananaWidth, "banana"),
+		
+		Banana(24, 160, bananaHeight, bananaWidth, "banana"),
+		
+		Banana(27, 150, bananaHeight, bananaWidth, "banana"),
+		
+		Banana(24, 145, bananaHeight, bananaWidth, "banana")
 	};
 	
 	for (int i = 0; i < bananaLen_3; i++)
@@ -147,7 +159,7 @@ int main()
 	int fuelLen_0(2);
 	Fuel FUELS_0[fuelLen_0]
 	{
-		Fuel(45, 20, fuelHeight, fuelWidth, "fuel"),
+		Fuel(45, 89, fuelHeight, fuelWidth, "fuel"),
 
 		Fuel(22, 125, fuelHeight, fuelWidth, "fuel")
 	};
@@ -159,9 +171,9 @@ int main()
 	int fuelLen_1(2);
 	Fuel FUELS_1[fuelLen_1]
 	{
-		Fuel(0, 0, fuelHeight, fuelWidth, "fuel"),
+		Fuel(6, 163, fuelHeight, fuelWidth, "fuel"),
 
-		Fuel(0, 1, fuelHeight, fuelWidth, "fuel")
+		Fuel(44, 60, fuelHeight, fuelWidth, "fuel")
 	};
 	for (int i = 0; i < fuelLen_1; i++)
 	{
@@ -173,7 +185,7 @@ int main()
 	{
 		Fuel(0, 0, fuelHeight, fuelWidth, "fuel"),
 
-		Fuel(0, 1, fuelHeight, fuelWidth, "fuel")
+		Fuel(46, 72, fuelHeight, fuelWidth, "fuel")
 	};
 	for (int i = 0; i < fuelLen_2; i++)
 	{
@@ -183,9 +195,9 @@ int main()
 	int fuelLen_3(2);
 	Fuel FUELS_3[fuelLen_3]
 	{
-		Fuel(0, 0, fuelHeight, fuelWidth, "fuel"),
+		Fuel(16, 128, fuelHeight, fuelWidth, "fuel"),
 
-		Fuel(0, 1, fuelHeight, fuelWidth, "fuel")
+		Fuel(32, 127, fuelHeight, fuelWidth, "fuel")
 	};
 	for (int i = 0; i < fuelLen_3; i++)
 	{
@@ -203,6 +215,12 @@ int main()
 	{
 		hide_panel(FUELS_4[i].pan);
 	}
+	
+	// Create FINISH FLAG
+	// TODO
+	int finishHeight(7), finishWidth(10), finishY(26), finishX(155);	
+	Screen FINISH(finishY, finishX, finishHeight, finishWidth, "finish");
+	hide_panel(FINISH.pan);
 
 	// Create HUD
 	int hudY(yMax - 5), hudX(0), hudHeight(5), hudWidth(xMax);
@@ -210,12 +228,18 @@ int main()
 	hide_panel(HUD.pan);
 	
 	// Create END menu
-	int endHeight(10), endWidth(29), endY(yMax/3 + tuneY), endX(xMax/3 + tuneX + 3), endLen = 2;
+	int endHeight(10), endWidth(29), endY(yMax/3 + tuneY), endX(xMax/3 + tuneX + 3), endLen = 5;
 	Screen END[endLen]
 	{
 		Screen(endY, endX, endHeight, endWidth, "gameover/end" + to_string(0)),
+		
+		Screen(endY, endX, endHeight, endWidth, "gameover/end" + to_string(1)),
+		
+		Screen(endY, endX, endHeight, endWidth, "gameover/end" + to_string(2)),
+		
+		Screen(endY, endX, endHeight, endWidth, "gameover/end" + to_string(3)),
 
-		Screen(endY, endX, endHeight, endWidth, "gameover/end" + to_string(1))
+		Screen(endY, endX, endHeight, endWidth, "gameover/end" + to_string(4))
 	};	
 	for (int i = 0; i < endLen; i++)
 	{
@@ -254,8 +278,7 @@ int main()
 	
 	baloon.HELP = HELP;
 	
-	// TODO
-	// 
+	//
 	baloon.BANANAS_0 = BANANAS_0;
 	baloon.bananaLen[0] = bananaLen_0;
 	
@@ -286,7 +309,9 @@ int main()
 
 	baloon.FUELS_4 = FUELS_4;
 	baloon.fuelLen[4] = fuelLen_4;
+	
 	//
+	baloon.FINISH = FINISH;
 	
 	// Setting what user observes
 	show_panel(baloon.TITLE.pan);

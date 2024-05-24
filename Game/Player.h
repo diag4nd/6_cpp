@@ -21,6 +21,7 @@ public:
 	Screen* END;
 	Screen HALL;
 	Screen HELP;
+	Screen FINISH;
 	
 	Banana* BANANAS_0;
 	Banana* BANANAS_1;
@@ -42,7 +43,7 @@ public:
 	int endLen;
 	vector<int> bananaLen;
 	vector<int> fuelLen;
-	int points;	
+	int points, attempts, bananasFound;	
 
 	void move();
 	void spendFuel();
