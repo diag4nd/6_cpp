@@ -3,7 +3,7 @@ all: main
 clean:
 	rm -rf game *.o game
 
-main: main.o functions.o globals.o Monkey.o Screen.o Player.o Object.o 
+main: main.o functions.o globals.o Monkey.o Screen.o Player.o Banana.o Fuel.o
 	g++ -lpanel -lncurses main.o -o game
 	./game
 
@@ -19,8 +19,11 @@ Screen.o: Screen.cpp
 Player.o: Player.cpp
 	g++ -lpanel -lncurses -c  Player.cpp -o Player.o
 
-Enemy.o: Object.cpp
-	g++ -lpanel -lncurses -c  Object.cpp -o Object.o
+Banana.o: Banana.cpp
+	g++ -lpanel -lncurses -c  Banana.cpp -o Banana.o
+
+Fuel.o: Fuel.cpp
+	g++ -lpanel -lncurses -c  Fuel.cpp -o Fuel.o
 
 globals.o: globals.cpp
 	g++ -lpanel -lncurses -c  globals.cpp -o globals.o

@@ -9,7 +9,8 @@
 #include "Monkey.cpp"
 #include "Screen.cpp"
 #include "Player.cpp"
-#include "Object.cpp"
+#include "Banana.cpp"
+#include "Fuel.cpp"
 
 using namespace std;
 
@@ -56,8 +57,8 @@ int main()
 	}
 
 	// Create MAPS
-	int mapHeight(yMax - 5), mapWidth(xMax - 1), mapY(0), mapX(0), mapLen(5);
-	Screen MAPS[mapLen]
+	int mapHeight(yMax - 5), mapWidth(xMax - 1), mapY(0), mapX(0), mapsLen(5);
+	Screen MAPS[mapsLen]
 	{
 		Screen(mapY, mapX, mapHeight, mapWidth, "maps/map" + to_string(0)),
 
@@ -69,21 +70,140 @@ int main()
 			
 		Screen(mapY, mapX, mapHeight, mapWidth, "maps/map" + to_string(4))
 	};	
-	for (int i = 0; i < mapLen; i++)
+	for (int i = 0; i < mapsLen; i++)
 	{
 		hide_panel(MAPS[i].pan);
-	}
-	/* TODO	
+	}	
+
 	// Create BANANAS
-	int objHeight(1), objWidth(1), objLen(2);
-	Object BANANAS[objLen]
+	int bananaHeight(1), bananaWidth(1);
+	
+	int bananaLen_0(2);
+	Banana BANANAS_0[bananaLen_0]
 	{
+		Banana(8, 54, bananaHeight, bananaWidth, "banana"),
 
+		Banana(44, 7, bananaHeight, bananaWidth, "banana")
+	};
+	for (int i = 0; i < bananaLen_0; i++)
+	{
+		hide_panel(BANANAS_0[i].pan);
+	}
+	
+	int bananaLen_1(2);
+	Banana BANANAS_1[bananaLen_1]
+	{
+		Banana(0, 0, bananaHeight, bananaWidth, "banana"),
+
+		Banana(0, 1, bananaHeight, bananaWidth, "banana")
+	};
+	
+	for (int i = 0; i < bananaLen_1; i++)
+	{
+		hide_panel(BANANAS_1[i].pan);
+	}
+	
+	int bananaLen_2(2);
+	Banana BANANAS_2[bananaLen_2]
+	{
+		Banana(0, 0, bananaHeight, bananaWidth, "banana"),
+
+		Banana(0, 1, bananaHeight, bananaWidth, "banana")
+	};
+	
+	for (int i = 0; i < bananaLen_2; i++)
+	{
+		hide_panel(BANANAS_2[i].pan);
+	}
+	
+	int bananaLen_3(2);
+	Banana BANANAS_3[bananaLen_3]
+	{
+		Banana(0, 0, bananaHeight, bananaWidth, "banana"),
+
+		Banana(0, 1, bananaHeight, bananaWidth, "banana")
+	};
+	
+	for (int i = 0; i < bananaLen_3; i++)
+	{
+		hide_panel(BANANAS_3[i].pan);
 	}
 
+	int bananaLen_4(2);
+	Banana BANANAS_4[bananaLen_4]
+	{
+		Banana(0, 0, bananaHeight, bananaWidth, "banana"),
+
+		Banana(0, 1, bananaHeight, bananaWidth, "banana")
+	};
+	
+	for (int i = 0; i < bananaLen_4; i++)
+	{
+		hide_panel(BANANAS_4[i].pan);
+	}
 
 	// Create FUELS
-	*/
+	int fuelHeight(1), fuelWidth(1);
+	int fuelLen_0(2);
+	Fuel FUELS_0[fuelLen_0]
+	{
+		Fuel(45, 20, fuelHeight, fuelWidth, "fuel"),
+
+		Fuel(22, 125, fuelHeight, fuelWidth, "fuel")
+	};
+	for (int i = 0; i < fuelLen_0; i++)
+	{
+		hide_panel(FUELS_0[i].pan);
+	}
+
+	int fuelLen_1(2);
+	Fuel FUELS_1[fuelLen_1]
+	{
+		Fuel(0, 0, fuelHeight, fuelWidth, "fuel"),
+
+		Fuel(0, 1, fuelHeight, fuelWidth, "fuel")
+	};
+	for (int i = 0; i < fuelLen_1; i++)
+	{
+		hide_panel(FUELS_1[i].pan);
+	}
+
+	int fuelLen_2(2);
+	Fuel FUELS_2[fuelLen_2]
+	{
+		Fuel(0, 0, fuelHeight, fuelWidth, "fuel"),
+
+		Fuel(0, 1, fuelHeight, fuelWidth, "fuel")
+	};
+	for (int i = 0; i < fuelLen_2; i++)
+	{
+		hide_panel(FUELS_2[i].pan);
+	}
+
+	int fuelLen_3(2);
+	Fuel FUELS_3[fuelLen_3]
+	{
+		Fuel(0, 0, fuelHeight, fuelWidth, "fuel"),
+
+		Fuel(0, 1, fuelHeight, fuelWidth, "fuel")
+	};
+	for (int i = 0; i < fuelLen_3; i++)
+	{
+		hide_panel(FUELS_3[i].pan);
+	}
+
+	int fuelLen_4(2);
+	Fuel FUELS_4[fuelLen_4]
+	{
+		Fuel(0, 0, fuelHeight, fuelWidth, "fuel"),
+
+		Fuel(0, 1, fuelHeight, fuelWidth, "fuel")
+	};
+	for (int i = 0; i < fuelLen_4; i++)
+	{
+		hide_panel(FUELS_4[i].pan);
+	}
+
 	// Create HUD
 	int hudY(yMax - 5), hudX(0), hudHeight(5), hudWidth(xMax);
 	Screen HUD(hudY, hudX, hudHeight, hudWidth, "hud");
@@ -118,13 +238,56 @@ int main()
 	hide_panel(baloon.pan);
 	
 	baloon.HUD = HUD;
-	baloon.MAPS = MAPS;
-	baloon.TITLE = TITLE;
-	baloon.MENU = MENU;
-	baloon.END = END;
-	baloon.HALL = HALL;
-	baloon.HELP = HELP;
 
+	baloon.MAPS = MAPS;
+	baloon.mapsLen - mapsLen;
+	
+	baloon.TITLE = TITLE;
+	
+	baloon.MENU = MENU;
+	baloon.menuLen = menuLen;
+
+	baloon.END = END;
+	baloon.endLen = endLen;
+	
+	baloon.HALL = HALL;
+	
+	baloon.HELP = HELP;
+	
+	// TODO
+	// 
+	baloon.BANANAS_0 = BANANAS_0;
+	baloon.bananaLen[0] = bananaLen_0;
+	
+	baloon.BANANAS_1 = BANANAS_1;
+	baloon.bananaLen[1] = bananaLen_1;
+
+	baloon.BANANAS_2 = BANANAS_2;
+	baloon.bananaLen[2] = bananaLen_2;
+
+	baloon.BANANAS_3 = BANANAS_3;
+	baloon.bananaLen[3] = bananaLen_3;
+
+	baloon.BANANAS_4 = BANANAS_4;
+	baloon.bananaLen[4] = bananaLen_4;
+	
+	//
+	baloon.FUELS_0 = FUELS_0;
+	baloon.fuelLen[0] = fuelLen_0;
+
+	baloon.FUELS_1 = FUELS_1;
+	baloon.fuelLen[1] = fuelLen_1;
+
+	baloon.FUELS_2 = FUELS_2;
+	baloon.fuelLen[2] = fuelLen_2;
+
+	baloon.FUELS_3 = FUELS_3;
+	baloon.fuelLen[3] = fuelLen_3;
+
+	baloon.FUELS_4 = FUELS_4;
+	baloon.fuelLen[4] = fuelLen_4;
+	//
+	
 	// Setting what user observes
 	show_panel(baloon.TITLE.pan);
 	show_panel(baloon.MENU[0].pan);

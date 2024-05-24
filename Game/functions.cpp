@@ -101,19 +101,20 @@ void play(Player _baloon)
 {
 	hide_panel(_baloon.MENU[_baloon.choice].pan);
 	
-	// Get screen size
-	int yMax, xMax;
-	getmaxyx(stdscr, yMax, xMax);
-
-	int baloonY(yMax/5), baloonX(xMax/5);
-	
-	_baloon.y = baloonY; 
-	_baloon.x = baloonX;
-	_baloon.location = 0;
-	_baloon.fuel = 100;
-	_baloon.isAlive = true;
+	_baloon.reset();
 	
 	show_panel(_baloon.MAPS[_baloon.location].pan);
+	// TODO
+	//
+	for (int i = 0; i < _baloon.bananaLen[0]; i++)
+	{	
+		show_panel(_baloon.BANANAS_0[i].pan);
+	}
+	for (int i = 0; i < _baloon.fuelLen[0]; i++)
+	{	
+		show_panel(_baloon.FUELS_0[i].pan);
+	}
+	//
 	show_panel(_baloon.HUD.pan);
 	show_panel(_baloon.pan);
 
@@ -176,6 +177,50 @@ void gameOver(Player _baloon)
 					hide_panel(_baloon.HUD.pan);
 					hide_panel(_baloon.pan);
 					
+					for (int i = 0; i < _baloon.bananaLen[_baloon.location]; i++)
+					{
+						switch (_baloon.location)
+						{
+							case 0:
+								hide_panel(_baloon.BANANAS_0[i].pan);
+								break;
+							case 1:
+								hide_panel(_baloon.BANANAS_1[i].pan);
+								break;
+							case 2:
+								hide_panel(_baloon.BANANAS_2[i].pan);
+								break;
+							case 3:
+								hide_panel(_baloon.BANANAS_3[i].pan);
+								break;
+							case 4:
+								hide_panel(_baloon.BANANAS_4[i].pan);
+								break;
+						}
+					}
+
+					for (int i = 0; i < _baloon.fuelLen[_baloon.location]; i++)
+					{
+						switch (_baloon.location)
+						{
+							case 0:
+								hide_panel(_baloon.FUELS_0[i].pan);
+								break;
+							case 1:
+								hide_panel(_baloon.FUELS_1[i].pan);
+								break;
+							case 2:
+								hide_panel(_baloon.FUELS_2[i].pan);
+								break;
+							case 3:
+								hide_panel(_baloon.FUELS_3[i].pan);
+								break;
+							case 4:
+								hide_panel(_baloon.FUELS_4[i].pan);
+								break;
+						}
+					}
+
 					_baloon.choice = 0;
 					show_panel(_baloon.MENU[_baloon.choice].pan);
 					update_panels();
@@ -184,12 +229,10 @@ void gameOver(Player _baloon)
 					navigate(_baloon);
 					break;
 			}
-			break;
 		default:
 			gameOver(_baloon);
 			break;
 	}
-
 }
 
 void hallOfFame(Player _baloon)

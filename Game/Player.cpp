@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <vector>
 #include "Screen.h"
 #include "globals.h"
 
@@ -11,6 +12,16 @@ using namespace std;
 Player::Player(int _y, int _x, int _h, int _w): Monkey(_y, _x, _h, _w), points(0), fuelMax(100), fuel(fuelMax), isAlive(true), location(0), choice(0)
 
 {
+	for (int i = 0; i < 5; i++)
+	{
+		bananaLen.push_back(0);
+	}
+
+	for (int i = 0; i < 5; i++)
+	{
+		fuelLen.push_back(0);
+	}
+
 	ifstream fRead;
 	string line;
 	int idx = 0;
@@ -139,7 +150,12 @@ void Player::move()
 
 void Player::spendFuel()
 {
-	fuel--;
+	fuel -= 1;
+	updateFuel();
+}
+
+void Player::updateFuel()
+{
 	for (int i = 0; i < fuelMax; i++)
 	{
 		if (i < fuel)
@@ -154,13 +170,169 @@ void Player::spendFuel()
 	wrefresh(HUD.win);
 }
 
+void Player::updatePoints()
+{
+	mvwprintw(HUD.win, 2, 133, to_string(points).c_str());
+
+	if (not points)
+	{
+		for (int i = 134; i < 134 + 5; i++)
+		{
+			mvwprintw(HUD.win, 2, i, " ");
+		}
+	}
+	
+	wrefresh(HUD.win);
+}
+
+
 void Player::jump(int _newLocation)
 {
 	int yMax, xMax;
 	getmaxyx(stdscr, yMax, xMax);
 	
 	hide_panel(MAPS[location].pan);
+	
+	switch(location)
+	{
+		case 0:
+			for (int i = 0; i < bananaLen[0]; i++)
+			{
+				hide_panel(BANANAS_0[i].pan);
+			}
+			for (int i = 0; i < fuelLen[0]; i++)
+			{
+				hide_panel(FUELS_0[i].pan);
+			}
+			break;
+		case 1:
+			for (int i = 0; i < bananaLen[1]; i++)
+			{
+				hide_panel(BANANAS_1[i].pan);
+			}
+			for (int i = 0; i < fuelLen[1]; i++)
+			{
+				hide_panel(FUELS_1[i].pan);
+			}
+			break;
+		case 2:
+			for (int i = 0; i < bananaLen[2]; i++)
+			{
+				hide_panel(BANANAS_2[i].pan);
+			}
+			for (int i = 0; i < fuelLen[2]; i++)
+			{
+				hide_panel(FUELS_2[i].pan);
+			}
+			break;
+		case 3:
+			for (int i = 0; i < bananaLen[3]; i++)
+			{
+				hide_panel(BANANAS_3[i].pan);
+			}
+			for (int i = 0; i < fuelLen[3]; i++)
+			{
+				hide_panel(FUELS_3[i].pan);
+			}
+			break;
+		case 4:
+			for (int i = 0; i < bananaLen[4]; i++)
+			{
+				hide_panel(BANANAS_4[i].pan);
+			}
+			for (int i = 0; i < fuelLen[4]; i++)
+			{
+				hide_panel(FUELS_4[i].pan);
+			}
+			break;
+	}
+
 	show_panel(MAPS[_newLocation].pan);
+
+	switch(_newLocation)
+	{
+		case 0:
+			for (int i = 0; i < bananaLen[0]; i++)
+			{
+				if (BANANAS_0[i].isActive)
+				{
+					show_panel(BANANAS_0[i].pan);
+				}
+			}
+			for (int i = 0; i < fuelLen[0]; i++)
+			{
+				if (FUELS_0[i].isActive)
+				{
+					show_panel(FUELS_0[i].pan);
+				}
+			}
+			break;
+		case 1:
+			for (int i = 0; i < bananaLen[1]; i++)
+			{
+				if (BANANAS_1[i].isActive)
+				{
+					show_panel(BANANAS_1[i].pan);
+				}
+			}
+			for (int i = 0; i < fuelLen[1]; i++)
+			{
+				if (FUELS_1[i].isActive)
+				{
+					show_panel(FUELS_1[i].pan);
+				}
+			}
+			break;
+		case 2:
+			for (int i = 0; i < bananaLen[2]; i++)
+			{
+				if (BANANAS_2[i].isActive)
+				{
+					show_panel(BANANAS_2[i].pan);
+				}
+			}
+			for (int i = 0; i < fuelLen[2]; i++)
+			{
+				if (FUELS_2[i].isActive)
+				{
+					show_panel(FUELS_2[i].pan);
+				}
+			}
+			break;
+		case 3:
+			for (int i = 0; i < bananaLen[3]; i++)
+			{
+				if (BANANAS_3[i].isActive)
+				{
+					show_panel(BANANAS_3[i].pan);
+				}
+			}
+			for (int i = 0; i < fuelLen[3]; i++)
+			{
+				if (FUELS_3[i].isActive)
+				{
+					show_panel(FUELS_3[i].pan);
+				}
+			}
+			break;
+		case 4:
+			for (int i = 0; i < bananaLen[4]; i++)
+			{
+				if (BANANAS_4[i].isActive)
+				{
+					show_panel(BANANAS_4[i].pan);
+				}
+			}
+			for (int i = 0; i < fuelLen[4]; i++)
+			{
+				if (FUELS_4[i].isActive)
+				{
+					show_panel(FUELS_4[i].pan);
+				}
+			}
+			break;
+	}
+
 	show_panel(pan);
 	
 	if (location - _newLocation == -1)
@@ -187,7 +359,6 @@ void Player::jump(int _newLocation)
 	{
 		y = 1;
 	}
-
 	
 	move_panel(pan, y, x);
 	
@@ -219,9 +390,157 @@ bool Player::intersects()
 				}
 			}
 		}
-	}	
+	}
 
 	fRead.close();
+
+	for (int i = y; i < y + height; i++)
+	{
+		for (int j = x; j < x + width; j++)
+		{
+			for (int k = 0; k < bananaLen[location]; k++)
+			{
+				switch (location)
+				{
+					case 0:
+						if ((j == BANANAS_0[k].x) and (i == BANANAS_0[k].y))
+						{
+							if (BANANAS_0[k].isActive)
+							{
+								points += BANANAS_0[k].reward;
+								BANANAS_0[k].isActive = false;
+								updatePoints();
+								hide_panel(BANANAS_0[k].pan);
+								update_panels();
+								doupdate();
+							}
+						}
+
+						if ((j == FUELS_0[k].x) and (i == FUELS_0[k].y))
+						{
+							if (FUELS_0[k].isActive)
+							{
+								fuel = fuelMax;
+								updateFuel();
+								FUELS_0[k].isActive = false;
+								hide_panel(FUELS_0[k].pan);
+								update_panels();
+								doupdate();
+							}
+						}
+						break;
+					case 1:
+						if ((j == BANANAS_1[k].x) and (i == BANANAS_1[k].y))
+						{
+							if (BANANAS_1[k].isActive)
+							{
+								points += BANANAS_1[k].reward;
+								BANANAS_1[k].isActive = false;
+								updatePoints();
+								hide_panel(BANANAS_1[k].pan);
+								update_panels();
+								doupdate();
+							}
+						}
+
+						if ((j == FUELS_1[k].x) and (i == FUELS_1[k].y))
+						{
+							if (FUELS_1[k].isActive)
+							{
+								fuel = fuelMax;
+								updateFuel();
+								FUELS_1[k].isActive = false;
+								hide_panel(FUELS_1[k].pan);
+								update_panels();
+								doupdate();
+							}
+						}
+						break;
+					case 2:
+						if ((j == BANANAS_2[k].x) and (i == BANANAS_2[k].y))
+						{
+							if (BANANAS_2[k].isActive)
+							{
+								points += BANANAS_2[k].reward;
+								BANANAS_2[k].isActive = false;
+								updatePoints();
+								hide_panel(BANANAS_2[k].pan);
+								update_panels();
+								doupdate();
+							}
+						}
+
+						if ((j == FUELS_2[k].x) and (i == FUELS_2[k].y))
+						{
+							if (FUELS_2[k].isActive)
+							{
+								fuel = fuelMax;
+								updateFuel();
+								FUELS_2[k].isActive = false;
+								hide_panel(FUELS_2[k].pan);
+								update_panels();
+								doupdate();
+							}
+						}
+						break;
+					case 3:
+						if ((j == BANANAS_3[k].x) and (i == BANANAS_3[k].y))
+						{
+							if (BANANAS_3[k].isActive)
+							{
+								points += BANANAS_3[k].reward;
+								BANANAS_3[k].isActive = false;
+								updatePoints();
+								hide_panel(BANANAS_3[k].pan);
+								update_panels();
+								doupdate();
+							}
+						}
+
+						if ((j == FUELS_3[k].x) and (i == FUELS_3[k].y))
+						{
+							if (FUELS_3[k].isActive)
+							{
+								fuel = fuelMax;
+								updateFuel();
+								FUELS_3[k].isActive = false;
+								hide_panel(FUELS_3[k].pan);
+								update_panels();
+								doupdate();
+							}
+						}
+						break;
+					case 4:
+						if ((j == BANANAS_4[k].x) and (i == BANANAS_4[k].y))
+						{
+							if (BANANAS_4[k].isActive)
+							{
+								points += BANANAS_4[k].reward;
+								BANANAS_4[k].isActive = false;
+								updatePoints();
+								hide_panel(BANANAS_4[k].pan);
+								update_panels();
+								doupdate();
+							}
+						}
+
+						if ((j == FUELS_4[k].x) and (i == FUELS_4[k].y))
+						{
+							if (FUELS_4[k].isActive)
+							{
+								fuel = fuelMax;
+								updateFuel();
+								FUELS_4[k].isActive = false;
+								hide_panel(FUELS_4[k].pan);
+								update_panels();
+								doupdate();
+							}
+						}
+						break;
+				}
+			}
+		}
+	}
 	
 	return false;
 }
@@ -247,4 +566,71 @@ void Player::hideAll()
 
 	hide_panel(HUD.pan);
 	hide_panel(pan);	
+}
+
+void Player::reset()
+{
+	// Get screen size
+	int yMax, xMax;
+	getmaxyx(stdscr, yMax, xMax);
+
+	int baloonY(yMax/5), baloonX(xMax/5);
+	
+	y = baloonY; 
+	x = baloonX;
+	location = 0;
+	
+	fuel = 100;
+	updateFuel();
+	
+	points = 0;
+	updatePoints();
+
+	isAlive = true;
+	
+	for (int i = 0; i < bananaLen[0]; i++)
+	{
+		BANANAS_0[i].isActive = true;
+	}
+	for (int i = 0; i < fuelLen[0]; i++)
+	{
+		FUELS_0[i].isActive = true;
+	}
+
+	for (int i = 0; i < bananaLen[1]; i++)
+	{
+		BANANAS_1[i].isActive = true;
+	}
+	for (int i = 0; i < fuelLen[1]; i++)
+	{
+		FUELS_1[i].isActive = true;
+	}
+
+	for (int i = 0; i < bananaLen[2]; i++)
+	{
+		BANANAS_2[i].isActive = true;
+	}
+	for (int i = 0; i < fuelLen[2]; i++)
+	{
+		FUELS_2[i].isActive = true;
+	}
+
+	for (int i = 0; i < bananaLen[3]; i++)
+	{
+		BANANAS_3[i].isActive = true;
+	}
+	for (int i = 0; i < fuelLen[3]; i++)
+	{
+		FUELS_3[i].isActive = true;
+	}
+
+	for (int i = 0; i < bananaLen[4]; i++)
+	{
+		BANANAS_4[i].isActive = true;
+	}
+	for (int i = 0; i < fuelLen[4]; i++)
+	{
+		FUELS_4[i].isActive = true;
+	}
+
 }
